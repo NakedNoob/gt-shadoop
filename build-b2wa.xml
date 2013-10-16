@@ -1,0 +1,211 @@
+<!-- ======================================================================= -->
+<!-- Ant build script to store common properties, paths and pattern sets.    -->
+<!-- ======================================================================= -->
+
+<project name="build-b2wa" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
+	<dirname property="imported.common.basedir" file="${ant.file.build-b2wa}"/>
+	<property file="${imported.common.basedir}/build-b2wa.properties" />
+	<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpath="${ivy.home}/${ivy.jar.name}"/>		
+
+    
+	<!--
+		PREPERATION SECTION (set proxy settings in build-b2wa.properties file
+	-->
+	<target name="set-proxy" description="setting proxy for local environment" >
+		<echo message="Be sure you have set your proxy settings in the correct properties file." />
+		<setproxy proxyhost="${proxy.host}"  proxyport="${proxy.port}"
+			proxyuser="${proxy.user}" proxypassword="${proxy.passwd}"
+		    nonproxyhosts="${nonproxyhosts}"/>
+		<echo message="PROXY	: ${proxy.host}" />
+		<echo message="PORT		: ${proxy.port}" />
+		<echo message="USER		: ${proxy.user}" />	 
+		<echo message="NO PROXY	: ${nonproxyhosts}" />	
+		<echo message="DONE" />
+	</target>
+	
+	<available property="ivy.installed" file="${ivy.home}/${ivy.jar.name}"/>
+	
+	<ivy:settings file="${basedir}/ivysettings.xml" />
+	<!-- If this is left in it will force a full resolve everytime the build.xml is opened, ie (ant -p) -->
+	<!--<ivy:cachepath pathid="ivy.cache.classpath"/>-->
+
+	<target name="passthrough" description="passthrough target that supplies the ability to invoke ant without doing any targets">
+		<echo message="This is a passthrough doing nothing but echoing this message" />
+		<echo message="This target is useful in automated builds." />
+	</target>
+
+	<target name="clean" description="Remove all generated files.">
+	  <delete dir="${build.dir}" />
+	  <delete dir="${classes.dir}" />
+	  <delete dir="${test.classes.dir}" />
+	  <delete dir="${dist.dir}" />
+	</target>
+	
+	<target name="init" depends="clean,set-proxy" description="prepare directories and resolve dependencies">
+	  	<mkdir dir="${build.dir}" />
+	  	<mkdir dir="${classes.dir}" />
+	    <mkdir dir="${test.classes.dir}" />
+	  	<mkdir dir="${dist.dir}" />
+		<antcall target="ivy-resolve"></antcall>
+	</target>
+		
+	<target name="ivy-resolve"  >
+		  <ivy:resolve resolveid="nexus-snapshots"/>
+	</target>
+	 
+	<target name="clean-cache-all" >
+			<delete includeemptydirs="true">
+				<fileset dir="${ivy.home}/cache" includes="**/*" />
+			</delete>
+	</target>
+	
+	<target name="clean-cache-b2wa" >
+			<delete includeemptydirs="true">
+				<fileset dir="${ivy.home}/cache/b2wa" includes="**/*" />
+				<fileset dir="${ivy.home}/cache" includes="resolved-*,*.xml,*.xsl,*.css" />
+			</delete>
+	</target>
+	
+	<target name="echo-classpath" >
+		   <ivy:cachepath pathid="ivy.cachepath"  />
+		    <pathconvert pathsep="${line.separator}  "
+		                 property="dependency.list"
+		                 refid="ivy.cachepath"/>
+		    <echo>DEPENDENCY LIST</echo>
+		    <echo>  ${dependency.list}</echo>
+	</target>
+	
+	<!--
+		BUILD SECTION (JAVA ONLY)
+	-->
+	
+	 <!--  build -->
+	 <target name="build" depends="init" description="Compile binary classes with dependencies." >
+	 	<ivy:cachepath pathid="ivy.cache.classpath"/>
+	 	<antcall target="echo-classpath"/>
+		<!--<ivy:cachepath organisation="b2wa" module="b2wa-ivy-template" revision="1.0" inline="true" pathid="ivy.cache.classpath"/>-->
+
+	 	
+	 	<javac srcdir="${src.dir}" target="1.6" source="1.6" destdir="${classes.dir}" debug="true" failonerror="true">
+			<classpath refid="ivy.cache.classpath" />
+		</javac>
+		<copy todir="${classes.dir}">
+			<fileset dir="${src.dir}" includes="**/*.tasks,**/*.properties,**/*.dat,**/*.xml"/>
+		</copy>
+		
+		<javac srcdir="${test.dir}" target="1.6" source="1.6" destdir="${test.classes.dir}" debug="true" failonerror="true">
+	 		<classpath path="${classes.dir}" />
+			<classpath refid="ivy.cache.classpath" />
+		</javac>
+		<copy todir="${test.classes.dir}">
+			<fileset dir="${test.dir}" includes="**/*.tasks,**/*.properties,**/*.dat,**/*.xml"/>
+		</copy>
+	 </target>
+
+
+   <target name="jar" depends="build">
+       <jar destfile="${dist.dir}/${ant.project.name}.jar" >
+          	<fileset dir="${classes.dir}" />
+       </jar>    	
+   </target>
+
+	<target name="source" depends="jar">
+      		<jar destfile="${dist.dir}/${ant.project.name}-sources.jar" basedir="${src.dir}"/>
+	</target>
+	
+	<target name="javadoc" depends="source">
+		<delete dir="${build.dir}/doc" />
+		<delete file="${dist.dir}/${ant.project.name}-docs.zip" />
+		<ivy:cachepath pathid="ivy.cache.classpath"  />
+	 	<antcall target="echo-classpath"/>
+	  	<javadoc access="protected" author="true" 
+	  		destdir="${build.dir}/doc" 
+	  		doctitle="${ant.project.name} API" 
+	  		nodeprecated="false" nodeprecatedlist="false" 
+	  		noindex="false" nonavbar="false" notree="false" packagenames="*" 
+	  		source="1.6" sourcepath="src" splitindex="true" 
+	  		use="true" version="true" > 
+		
+	 		<classpath path="${classes.dir}" />
+			<classpath refid="ivy.cache.classpath" />
+		</javadoc>
+			<zip destfile="${dist.dir}/${ant.project.name}-docs.zip" encoding="UTF-8">
+	  		<fileset dir="${build.dir}/doc" /> 
+		</zip>
+		<delete dir="${build.dir}/doc" />
+	</target>
+
+	
+	<target name="install">
+		<!--<antcall target="jar" />-->
+		<!--<antcall target="source" />-->
+		<antcall target="javadoc" />
+		<antcall target="ivy-publish-local" />
+	</target>
+	
+	<target name="snapshot" depends="install">
+		<!--<antcall target="jar" />-->
+		<!--<antcall target="source" />-->
+		<!--<antcall target="javadoc" />-->
+		<antcall target="ivy-snapshot" />
+	</target>	
+	
+	<!--
+			PUBLICATION SECTION (via ivy)
+	-->
+	<target name="check">
+	  <pathconvert property="packaged" setonempty="false" pathsep=" ">
+	    <path>
+	      <fileset dir="${dist.dir}" includes="*.*" />
+	    </path>
+	  </pathconvert>
+	  <echo message="package ready: ${packaged}" />
+	</target>
+	
+	<target name="gen-pom" depends="check" description="generates a pom for maven repositories">
+	  <ivy:makepom ivyfile="${basedir}/ivy.xml" pomfile="${dist.dir}/${ant.project.name}.pom">
+	    <mapping conf="default" scope="compile"/>
+	  </ivy:makepom>
+	</target>
+	 
+	<!--
+	  publishes to ~/.ivy2/cache so that other testing
+	  builds on our local machine can see it
+	-->
+	<target name="ivy-publish-local" depends="ivy-resolve,gen-pom" if="packaged" description="publish jar/source to ivy cache mounted at $user.home/.ivy2/cache">
+	  <ivy:publish resolver="local-ivy" forcedeliver="true"  overwrite="true" publishivy="true">
+	    <artifacts pattern="${dist.dir}/[artifact].[ext]"/>
+	  </ivy:publish>
+	</target>
+	 
+	<!--
+	  pubishes to the ~/repo directory, which should be something
+	  like an sshfs-mount of the public maven repository you are
+	  publishing to
+	-->
+	<target name="m2-publish-local" depends="ivy-resolve,gen-pom" if="packaged" description="publish jar/source to maven repo mounted at ~/repo">
+	  <ivy:publish resolver="local-m2" forcedeliver="true" overwrite="true" publishivy="false">
+	    <artifacts pattern="${dist.dir}/[artifact].[ext]" />
+	  </ivy:publish>
+	</target>
+
+	<!--
+	  publishes to snapshots
+	-->
+	<target name="ivy-snapshot" depends="ivy-resolve,gen-pom" if="packaged" description="publish jar/source to maven repo">
+		<ivy:publish resolver="nexus-snapshots" forcedeliver="true"  overwrite="true" publishivy="true">
+	    	<artifacts pattern="${dist.dir}/[artifact].[ext]"/>
+	  	</ivy:publish>
+	</target>
+
+	<!--
+	  publishes to release
+	-->
+	<target name="ivy-release" depends="ivy-resolve,gen-pom" if="packaged" description="publish jar/source to maven repo">
+		<ivy:publish resolver="nexus-releases" forcedeliver="true"  overwrite="true" publishivy="true">
+	    	<artifacts pattern="${dist.dir}/[artifact].[ext]"/>
+	  	</ivy:publish>
+	</target>
+
+
+</project>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Commit Permissions Require Project Admin on this file -->
+
+<ivysettings>
+	<settings defaultResolver="development"/>
+  	<credentials host="137.51.134.57"
+                      realm="Sonatype Nexus Repository Manager"
+                      username="deployment" passwd="deployment123"/>
+ 	
+  	<property name="nexus-public" value="http://137.51.134.57:8081/nexus/content/groups/public"/>
+  	<property name="nexus-releases" value="http://137.51.134.57:8081/nexus/content/repositories/releases"/>
+  	<property name="nexus-snapshots" value="http://137.51.134.57:8081/nexus/content/repositories/snapshots"/>
+	<property name="nexus-central" value="http://137.51.134.57:8081/nexus/content/repositories/central"/>
+	<property name="geo-tools" value="http://download.osgeo.org/webdav/geotools"/>
+	<property name="geo-tools-2" value="http://repo.opengeo.org/org/geotools"/>
+  	<property name="local-ivy" value="${user.home}/.ivy2/cache"/>
+  	<property name="local-m2" value="${user.home}/.m2/repository"/>
+	<resolvers>
+	
+		<filesystem name="local-m2">
+			<artifact pattern="${local-m2}/[organisation]/[module]/[type]s/[artifact]-[revision].[ext]" />
+		</filesystem>
+		<filesystem name="local-ivy">
+			<artifact pattern="${local-ivy}/[organisation]/[module]/[type]s/[artifact]-[revision].[ext]" />
+      	</filesystem>
+		<url name="nexus-snapshots" m2compatible="true" >
+			<artifact pattern="${nexus-snapshots}/[module]/[revision]/[artifact]-[revision].[ext]" />
+		</url>
+	   	<url name="nexus-releases" m2compatible="true" >
+			<artifact pattern="${nexus-releases}/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+		</url>     
+		<url name="nexus-public" m2compatible="true" >
+			<artifact pattern="${nexus-public}/[module]/[revision]/[artifact]-[revision].[ext]" />
+		</url> 	
+		<url name="nexus-central" m2compatible="true" >
+			<artifact pattern="${nexus-central}/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+		</url> 
+		<url name="geo-tools-2" m2compatible="true" >
+			<artifact pattern="${geo-tools-2}/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+		</url>	
+		<url name="geo-tools" m2compatible="true" >
+			<artifact pattern="${geo-tools}/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+		</url>	
+		<ibiblio name="repo1.maven.org" m2compatible="true"/>
+		<ibiblio name="nexus-maven" m2compatible="true" root="http://137.51.134.57:8081/nexus/content/repositories/central" />
+		
+		<chain name="development" returnFirst="false">
+			<resolver ref="local-ivy" />
+			<resolver ref="repo1.maven.org" />
+			<resolver ref="geo-tools" />
+			<resolver ref="geo-tools-2" />
+			<resolver ref="nexus-releases" />
+			<resolver ref="nexus-snapshots" />
+			<resolver ref="local-m2" />
+		</chain>
+	</resolvers>
+</ivysettings>
