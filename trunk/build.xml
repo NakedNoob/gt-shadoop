@@ -1,0 +1,4 @@
+<project name="gt-shadoop" xmlns:ivy="antlib:org.apache.ivy.ant">
+	<import file="build-b2wa.xml" />
+	
+</project>

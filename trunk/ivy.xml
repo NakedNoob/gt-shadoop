@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	version="2.0" xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+	<info organisation="b2wa" module="gt-shadoop" status="integration"
+		revision="10.0" />
+	<configurations>
+		<conf name="default" />
+		<conf name="compile" />
+		<conf name="runtime" />
+	</configurations>
+	<publications>
+		<artifact name="gt-shadoop" type="jar" ext="jar" />
+	</publications>
+	<dependencies>
+		<dependency org="org.geotools" name="gt-metadata" rev="10.0"/>
+		<dependency org="org.geotools" name="gt-opengis" rev="10.0" />
+		<dependency org="org.geotools" name="gt-api" rev="10.0" />
+		<dependency org="org.geotools" name="gt-main" rev="10.0" />
+		<dependency org="org.geotools" name="gt-referencing" rev="10.0" />
+		<dependency org="com.vividsolutions" name="jts" rev="1.11"/>
+            
+	</dependencies>
+</ivy-module>
