@@ -28,23 +28,49 @@ import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.geom.PrecisionModel;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ShadoopResultSet.
+ */
 public class ShadoopResultSet
 {
 
+    /** The layer. */
     private ShadoopLayer                   layer      = null;
+    
+    /** The features. */
     private ArrayList<SimpleFeature>     features   = null;
+    
+    /** The bounds. */
     private ReferencedEnvelope           bounds     = null;
+    
+    /** The min x. */
     double                               minX       = 180;
+    
+    /** The max x. */
     double                               maxX       = -180;
+    
+    /** The min y. */
     double                               minY       = 90;
+    
+    /** The max y. */
     double                               maxY       = -90;
-    /** Package logger */
+    
+    /** Package logger. */
     static private final Logger          log        = ShadoopPluginConfig.getLog();
 
+    /** The Constant pm. */
     static private final PrecisionModel  pm         = new PrecisionModel();
-    /** GeometryFactory with given precision model */
+    
+    /** GeometryFactory with given precision model. */
     static private final GeometryFactory geoFactory = new GeometryFactory( pm, -1 );
 
+    /**
+     * Instantiates a new shadoop result set.
+     *
+     * @param layer the layer
+     * @param query the query
+     */
     public ShadoopResultSet (ShadoopLayer layer, BaseShadoopQueryObject query)
     {
         this.layer = layer;
@@ -58,8 +84,8 @@ public class ShadoopResultSet
 
     /**
      * Build features for given layer; convert shadoop collection records to equivalent geoTools
-     * SimpleFeatureBuilder
-     * 
+     * SimpleFeatureBuilder.
+     *
      * @param query shadoopDB query (empty to find all)
      */
     private void buildFeatures (BaseShadoopQueryObject query)
@@ -152,26 +178,47 @@ public class ShadoopResultSet
         }
     }
 
+    /**
+     * Sets the properties.
+     *
+     * @param fb the fb
+     * @param string the string
+     * @param props the props
+     */
     private void setProperties(SimpleFeatureBuilder fb, String string,
 			DSObject props) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/**
+	 * Creates the geometry.
+	 *
+	 * @param recordGeoType the record geo type
+	 * @param geo the geo
+	 * @return the geometry
+	 */
 	private Geometry createGeometry(GeometryType recordGeoType, DSObject geo) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/**
+	 * Gets the schema.
+	 *
+	 * @return the schema
+	 */
 	public SimpleFeatureType getSchema ()
     {
         return layer.getSchema();
     }
 
     /**
-     * Get Feature references by index
-     * @param idx
+     * Get Feature references by index.
+     *
+     * @param idx the idx
      * @return SimpleFeature, null if idx out of bounds
+     * @throws IndexOutOfBoundsException the index out of bounds exception
      */
     public SimpleFeature getFeature (int idx) throws IndexOutOfBoundsException
     {
@@ -181,19 +228,29 @@ public class ShadoopResultSet
         return features.get( idx );
     }
 
+    /**
+     * Gets the count.
+     *
+     * @return the count
+     */
     public int getCount ()
     {
         return features.size();
     }
 
+    /**
+     * Gets the bounds.
+     *
+     * @return the bounds
+     */
     public ReferencedEnvelope getBounds ()
     {
         return bounds;
     }
 
     /**
-     * Paginate result features using startIndex and maxFeatures
-     * 
+     * Paginate result features using startIndex and maxFeatures.
+     *
      * @param startIndex starting index (>= 0)
      * @param maxFeatures max features to return (> 0)
      */

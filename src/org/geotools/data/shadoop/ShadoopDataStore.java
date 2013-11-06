@@ -38,19 +38,33 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.geotools.data.shadoop.query.ShadoopCollection;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ShadoopDataStore.
+ */
 public class ShadoopDataStore implements DataStore
 {
 
-    /** List of shadoop layers for this shadoop store */
+    /** List of shadoop layers for this shadoop store. */
     private ArrayList<ShadoopLayer>     layers = null;
+    
+    /** The crs. */
     private CoordinateReferenceSystem crs    = null;
-    /** Config for this shadoop plugin */
+    
+    /** Config for this shadoop plugin. */
     private ShadoopPluginConfig         config = null;
+    
+    /** The lsn mgr. */
     private FeatureListenerManager    lsnMgr = null;
 
-    /** Package logger */
+    /** Package logger. */
     private final static Logger       log    = ShadoopPluginConfig.getLog();
 
+    /**
+     * Instantiates a new shadoop data store.
+     *
+     * @param config the config
+     */
     public ShadoopDataStore (ShadoopPluginConfig config)
     {
         this.config = config;
@@ -74,7 +88,9 @@ public class ShadoopDataStore implements DataStore
 
     /**
      * Get list of valid layers for this shadoop DB; those containing at least one valid, non-null
-     * GeoJSON geometry
+     * GeoJSON geometry.
+     *
+     * @return the layers
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
     private void getLayers ()
@@ -134,26 +150,54 @@ public class ShadoopDataStore implements DataStore
         }
     }
 
+    /**
+     * Gets the crs.
+     *
+     * @return the crs
+     */
     public CoordinateReferenceSystem getCRS ()
     {
         return crs;
     }
 
+    /**
+     * Gets the config.
+     *
+     * @return the config
+     */
     public ShadoopPluginConfig getConfig ()
     {
         return config;
     }
 
+    /**
+     * Adds the listener.
+     *
+     * @param src the src
+     * @param listener the listener
+     */
     public void addListener (FeatureSource<?, ?> src, FeatureListener listener)
     {
         lsnMgr.addFeatureListener( src, listener );
     }
 
+    /**
+     * Removes the listener.
+     *
+     * @param src the src
+     * @param listener the listener
+     */
     public void removeListener (FeatureSource<?, ?> src, FeatureListener listener)
     {
         lsnMgr.removeFeatureListener( src, listener );
     }
 
+    /**
+     * Gets the keywords.
+     *
+     * @param typeName the type name
+     * @return the keywords
+     */
     public Set<String> getKeywords (String typeName)
     {
         Set<String> result = null;
@@ -170,24 +214,51 @@ public class ShadoopDataStore implements DataStore
         return result;
     }
 
+    /**
+     * Gets the locking manager.
+     *
+     * @return the locking manager
+     */
     public LockingManager getLockingManager ()
     {
         // returning null as per DataStore.getLockingManager() contract
         return null;
     }
 
+    /**
+     * Gets the feature writer append.
+     *
+     * @param typeName the type name
+     * @param transaction the transaction
+     * @return the feature writer append
+     */
     public FeatureWriter<SimpleFeatureType, SimpleFeature> getFeatureWriterAppend (final String typeName,
                                                                                    final Transaction transaction)
     {
         return new EmptyFeatureWriter( new SimpleFeatureTypeBuilder().buildFeatureType() );
     }
 
+    /**
+     * Gets the feature writer.
+     *
+     * @param typeName the type name
+     * @param transaction the transaction
+     * @return the feature writer
+     */
     public FeatureWriter<SimpleFeatureType, SimpleFeature> getFeatureWriter (final String typeName,
                                                                              final Transaction transaction)
     {
         return new EmptyFeatureWriter( new SimpleFeatureTypeBuilder().buildFeatureType() );
     }
 
+    /**
+     * Gets the feature writer.
+     *
+     * @param typeName the type name
+     * @param filter the filter
+     * @param transaction the transaction
+     * @return the feature writer
+     */
     public FeatureWriter<SimpleFeatureType, SimpleFeature> getFeatureWriter (final String typeName,
                                                                              final Filter filter,
                                                                              final Transaction transaction)
@@ -195,6 +266,13 @@ public class ShadoopDataStore implements DataStore
         return new EmptyFeatureWriter( new SimpleFeatureTypeBuilder().buildFeatureType() );
     }
 
+    /**
+     * Gets the feature reader.
+     *
+     * @param query the query
+     * @param transaction the transaction
+     * @return the feature reader
+     */
     public FeatureReader<SimpleFeatureType, SimpleFeature> getFeatureReader (final Query query,
                                                                              final Transaction transaction)
     {
@@ -206,12 +284,25 @@ public class ShadoopDataStore implements DataStore
         return new ShadoopFeatureReader( rs );
     }
 
+    /**
+     * Gets the feature source.
+     *
+     * @param typeName the type name
+     * @return the feature source
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     public SimpleFeatureSource getFeatureSource (final String typeName) throws IOException
     {
         ShadoopLayer layer = getMongoLayer( typeName );
         return new ShadoopFeatureSource( this, layer );
     }
 
+    /**
+     * Gets the view.
+     *
+     * @param query the query
+     * @return the view
+     */
     public FeatureSource<SimpleFeatureType, SimpleFeature> getView (final Query query)
     {
         FilterToShadoopQuery f2m = new FilterToShadoopQuery();
@@ -221,6 +312,12 @@ public class ShadoopDataStore implements DataStore
         return new ShadoopFeatureSource( this, layer, dbo );
     }
 
+    /**
+     * Gets the schema.
+     *
+     * @param typeName the type name
+     * @return the schema
+     */
     public SimpleFeatureType getSchema (final String typeName)
     {
         SimpleFeatureType sft = null;
@@ -236,6 +333,11 @@ public class ShadoopDataStore implements DataStore
         return sft;
     }
 
+    /**
+     * Gets the type names.
+     *
+     * @return the type names
+     */
     public String[] getTypeNames ()
     {
         String[] names = new String[layers.size()];
@@ -247,27 +349,57 @@ public class ShadoopDataStore implements DataStore
         return names;
     }
 
+    /**
+     * Update schema.
+     *
+     * @param typeName the type name
+     * @param featureType the feature type
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     public void updateSchema (final String typeName, final SimpleFeatureType featureType)
                                                                                          throws IOException
     {
         throw new UnsupportedOperationException( "Schema modification not supported" );
     }
 
+    /**
+     * Dispose.
+     */
     public void dispose ()
     {
 
     }
 
+    /**
+     * Gets the feature source.
+     *
+     * @param name the name
+     * @return the feature source
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     public SimpleFeatureSource getFeatureSource (Name name) throws IOException
     {
         return getFeatureSource( name.getLocalPart() );
     }
 
+    /**
+     * Gets the schema.
+     *
+     * @param name the name
+     * @return the schema
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     public SimpleFeatureType getSchema (Name name) throws IOException
     {
         return getSchema( name.getLocalPart() );
     }
 
+    /**
+     * Gets the names.
+     *
+     * @return the names
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     public List<Name> getNames () throws IOException
     {
         List<Name> names = new ArrayList<Name>( layers.size() );
@@ -278,17 +410,36 @@ public class ShadoopDataStore implements DataStore
         return names;
     }
 
+    /**
+     * Update schema.
+     *
+     * @param typeName the type name
+     * @param featureType the feature type
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     public void updateSchema (Name typeName, SimpleFeatureType featureType) throws IOException
     {
         updateSchema( typeName.getLocalPart(), featureType );
     }
 
+    /**
+     * Creates the schema.
+     *
+     * @param featureType the feature type
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws IllegalArgumentException the illegal argument exception
+     */
     public void createSchema (final SimpleFeatureType featureType) throws IOException,
                                                                   IllegalArgumentException
     {
 
     }
 
+    /**
+     * Gets the info.
+     *
+     * @return the info
+     */
     public ServiceInfo getInfo ()
     {
         DefaultServiceInfo info = new DefaultServiceInfo();
@@ -304,6 +455,12 @@ public class ShadoopDataStore implements DataStore
         return info;
     }
 
+    /**
+     * Gets the mongo layer.
+     *
+     * @param typeName the type name
+     * @return the mongo layer
+     */
     public ShadoopLayer getMongoLayer (String typeName)
     {
         ShadoopLayer layer = null;
