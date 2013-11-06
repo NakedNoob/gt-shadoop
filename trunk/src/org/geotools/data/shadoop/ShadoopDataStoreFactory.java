@@ -10,19 +10,39 @@ import java.util.logging.Logger;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFactorySpi;
 
+// TODO: Auto-generated Javadoc
+/**
+ * A factory for creating ShadoopDataStore objects.
+ */
 public class ShadoopDataStoreFactory implements DataStoreFactorySpi
 {
 
+    /** The Constant FACTORY_DESCRIPTION. */
     private static final String FACTORY_DESCRIPTION  = "MongoDB GeoServer Plugin";
+    
+    /** The Constant FACTORY_DISPLAY_NAME. */
     private static final String FACTORY_DISPLAY_NAME = "MongoDB";
-    /** Package logger */
+    
+    /** Package logger. */
     static private final Logger log                  = ShadoopPluginConfig.getLog();
 
+    /**
+     * Creates a new ShadoopDataStore object.
+     *
+     * @param map the map
+     * @return the data store
+     */
     public DataStore createNewDataStore (Map<String, Serializable> map)
     {
         return createDataStore( map );
     }
 
+    /**
+     * Creates a new ShadoopDataStore object.
+     *
+     * @param params the params
+     * @return the data store
+     */
     public DataStore createDataStore (Map<String, Serializable> params)
     {
         DataStore theStore = null;
@@ -40,6 +60,11 @@ public class ShadoopDataStoreFactory implements DataStoreFactorySpi
         return theStore;
     }
 
+    /**
+     * Checks if is available.
+     *
+     * @return true, if is available
+     */
     public boolean isAvailable ()
     {
         boolean result = false;
@@ -56,6 +81,12 @@ public class ShadoopDataStoreFactory implements DataStoreFactorySpi
         return result;
     }
 
+    /**
+     * Can process.
+     *
+     * @param params the params
+     * @return true, if successful
+     */
     public boolean canProcess (Map<String, Serializable> params)
     {
 
@@ -73,22 +104,42 @@ public class ShadoopDataStoreFactory implements DataStoreFactorySpi
         return result;
     }
 
+    /**
+     * Gets the parameters info.
+     *
+     * @return the parameters info
+     */
     public DataStoreFactorySpi.Param[] getParametersInfo ()
     {
         List<Param> params = ShadoopPluginConfig.getPluginParams();
         return params.toArray( new Param[params.size()] );
     }
 
+    /**
+     * Gets the description.
+     *
+     * @return the description
+     */
     public String getDescription ()
     {
         return FACTORY_DESCRIPTION;
     }
 
+    /**
+     * Gets the display name.
+     *
+     * @return the display name
+     */
     public String getDisplayName ()
     {
         return FACTORY_DISPLAY_NAME;
     }
 
+    /**
+     * Gets the implementation hints.
+     *
+     * @return the implementation hints
+     */
     public Map<RenderingHints.Key, ?> getImplementationHints ()
     {
         return Collections.emptyMap();

@@ -24,48 +24,86 @@ import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ShadoopLayer.
+ */
 public class ShadoopLayer
 {
 
+    /** The config. */
     private ShadoopPluginConfig         config    = null;
+    
+    /** The layer name. */
     private String                    layerName = null;
+    
+    /** The schema. */
     private SimpleFeatureType         schema    = null;
+    
+    /** The keywords. */
     private Set<String>               keywords  = null;
+    
+    /** The crs. */
     private CoordinateReferenceSystem crs       = null;
-    /** meta data for layer defining geometry type, property field names and types */
+    
+    /** meta data for layer defining geometry type, property field names and types. */
 
     private BaseShadoopQueryObject                  metaData  = null;
 
-    /** Supported GeoJSON geometry types */
+    /**
+     * Supported GeoJSON geometry types.
+     */
     static public enum GeometryType
     {
-        GeometryCollection, LineString, Point, Polygon, MultiLineString, MultiPoint, MultiPolygon, Unknown;
+        
+        /** The Geometry collection. */
+        GeometryCollection, 
+ /** The Line string. */
+ LineString, 
+ /** The Point. */
+ Point, 
+ /** The Polygon. */
+ Polygon, 
+ /** The Multi line string. */
+ MultiLineString, 
+ /** The Multi point. */
+ MultiPoint, 
+ /** The Multi polygon. */
+ MultiPolygon, 
+ /** The Unknown. */
+ Unknown;
     }
 
-    /** Geometry type for this layer */
+    /** Geometry type for this layer. */
     private GeometryType geometryType = null;
 
     /**
      * How to calculate collection record fields and types Majority: for same named fields with
      * different types use major instance to determine which type to assign String: if same named
-     * fields with different types exist; store them as Strings
+     * fields with different types exist; store them as Strings.
      */
     static public enum RecordBuilder
     {
-        MAJORITY, STRING;
+        
+        /** The majority. */
+        MAJORITY, 
+ /** The string. */
+ STRING;
     }
 
-    /** How to build records with potentially different types for this layer */
+    /** How to build records with potentially different types for this layer. */
     private RecordBuilder                  buildRule       = RecordBuilder.MAJORITY;
 
-    /** Metadata map function (ensure no comments) */
+    /** Metadata map function (ensure no comments). */
     private String                         metaMapFunc     = "function() { mapfields_recursive (\"\", this);}";
-    /** Metadata reduce function (ensure no comments) */
+    
+    /** Metadata reduce function (ensure no comments). */
     private String                         metaReduceFunc  = "function (key, vals) {"
                                                                    + "  sum = 0;"
                                                                    + "  for (var i in vals) sum += vals[i];"
                                                                    + "  return sum;" + "}";
-    /** Name of collection holding metadata results */
+    
+    /** Name of collection holding metadata results. */
     private String                         metaResultsColl = "FieldsAndTypes";
 
     /**
@@ -85,9 +123,15 @@ public class ShadoopLayer
         classNameMap.put( "string", String.class.getCanonicalName() );
     }
 
-    /** Package logger */
+    /** Package logger. */
     static private final Logger            log             = ShadoopPluginConfig.getLog();
 
+    /**
+     * Instantiates a new shadoop layer.
+     *
+     * @param coll the coll
+     * @param config the config
+     */
     public ShadoopLayer (ShadoopCollection coll, ShadoopPluginConfig config)
     {
         this.config = config;
@@ -169,34 +213,59 @@ public class ShadoopLayer
     }
 
 
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
     public String getName ()
     {
         return layerName;
     }
 
+    /**
+     * Gets the schema.
+     *
+     * @return the schema
+     */
     public SimpleFeatureType getSchema ()
     {
         return schema;
     }
 
+    /**
+     * Gets the keywords.
+     *
+     * @return the keywords
+     */
     public Set<String> getKeywords ()
     {
         return keywords;
     }
 
+    /**
+     * Gets the crs.
+     *
+     * @return the crs
+     */
     public CoordinateReferenceSystem getCRS ()
     {
         return crs;
     }
 
+    /**
+     * Gets the config.
+     *
+     * @return the config
+     */
     public ShadoopPluginConfig getConfig ()
     {
         return config;
     }
 
     /**
-     * Get GeometryType
-     * 
+     * Get GeometryType.
+     *
      * @return GeometryType, may be null if not set to valid and supported GeoJSON geometry
      */
     public GeometryType getGeometryType ()
@@ -205,8 +274,8 @@ public class ShadoopLayer
     }
 
     /**
-     * Generate model of collection records' data fields and types
-     * 
+     * Generate model of collection records' data fields and types.
+     *
      * @param coll shadoop collection
      * @param buildRule which rule to apply if same named fields with different types exist
      * @return JSON object describing collection record
@@ -220,6 +289,9 @@ public class ShadoopLayer
 
 
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString ()
     {
