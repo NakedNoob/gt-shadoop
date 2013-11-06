@@ -78,7 +78,7 @@ public class ShadoopResourceInfo implements ResourceInfo
      */
     public String getDescription ()
     {
-        return "MongoDB Resource";
+        return "Shadoop Resource";
     }
 
     /**

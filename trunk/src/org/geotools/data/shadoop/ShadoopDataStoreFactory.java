@@ -18,10 +18,10 @@ public class ShadoopDataStoreFactory implements DataStoreFactorySpi
 {
 
     /** The Constant FACTORY_DESCRIPTION. */
-    private static final String FACTORY_DESCRIPTION  = "MongoDB GeoServer Plugin";
+    private static final String FACTORY_DESCRIPTION  = "Shadoop GeoServer Plugin";
     
     /** The Constant FACTORY_DISPLAY_NAME. */
-    private static final String FACTORY_DISPLAY_NAME = "MongoDB";
+    private static final String FACTORY_DISPLAY_NAME = "Shadoop";
     
     /** Package logger. */
     static private final Logger log                  = ShadoopPluginConfig.getLog();
@@ -71,12 +71,12 @@ public class ShadoopDataStoreFactory implements DataStoreFactorySpi
         try
         {
             // basic check to ensure shadoop jar available
-            Class.forName( "com.shadoopdb.BaseDSObject" );
+            Class.forName( "org.geotools.data.shadoop.query.BaseShadoopQueryObject" );
             result = true;
         }
         catch (Throwable t)
         {
-            log.severe( "Mongo Plugin: The MongoDB JAR file was not found on the class path." );
+            log.severe( "Shadoop Plugin: The Shadoop JAR file was not found on the class path." );
         }
         return result;
     }

@@ -95,22 +95,22 @@ public class ShadoopPluginConfig
             param = params.get( SHADOOP_HOST_PARAM ).toString();
             if (param == null)
             {
-                msg = "Mongo Plugin: Missing server name param";
+                msg = "SHADOOP Plugin: Missing server name param";
                 throw new Exception();
             }
             shadoopHost = param;
             param = params.get( SHADOOP_PORT_PARAM ).toString();
             if (param == null)
             {
-                msg = "Mongo Plugin: Missing port param";
+                msg = "SHADOOP Plugin: Missing port param";
                 throw new Exception();
             }
-            msg = "Mongo Plugin: Error parsing port param";
+            msg = "SHADOOP Plugin: Error parsing port param";
             shadoopPort = Integer.parseInt( param );
             param = params.get( SHADOOP_DB_NAME_PARAM ).toString();
             if (param == null)
             {
-                msg = "Mongo Plugin: Missing database name param";
+                msg = "SHADOOP Plugin: Missing database name param";
                 throw new Exception();
             }
             shadoopDB = param;

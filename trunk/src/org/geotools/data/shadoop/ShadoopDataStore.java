@@ -98,7 +98,6 @@ public class ShadoopDataStore implements DataStore
         Shadoop shadoop = null;
         try
         {
-            // Get the list of collections from Mongo...
             shadoop = new Shadoop( config );
             ShadoopDS db = shadoop.getDS( config.getDB() ); // TODO add authentication
             Set<String> colls = db.getCollectionNames();
@@ -279,7 +278,7 @@ public class ShadoopDataStore implements DataStore
         FilterToShadoopQuery f2m = new FilterToShadoopQuery();
         Filter filter = query.getFilter();
         BaseShadoopQueryObject dbo = (BaseShadoopQueryObject) filter.accept( f2m, null );
-        ShadoopLayer layer = getMongoLayer( query.getTypeName() );
+        ShadoopLayer layer = getShadoopLayer( query.getTypeName() );
         ShadoopResultSet rs = new ShadoopResultSet( layer, dbo );
         return new ShadoopFeatureReader( rs );
     }
@@ -293,7 +292,7 @@ public class ShadoopDataStore implements DataStore
      */
     public SimpleFeatureSource getFeatureSource (final String typeName) throws IOException
     {
-        ShadoopLayer layer = getMongoLayer( typeName );
+        ShadoopLayer layer = getShadoopLayer( typeName );
         return new ShadoopFeatureSource( this, layer );
     }
 
@@ -308,7 +307,7 @@ public class ShadoopDataStore implements DataStore
         FilterToShadoopQuery f2m = new FilterToShadoopQuery();
         Filter filter = query.getFilter();
         BaseShadoopQueryObject dbo = (BaseShadoopQueryObject) filter.accept( f2m, null );
-        ShadoopLayer layer = getMongoLayer( query.getTypeName() );
+        ShadoopLayer layer = getShadoopLayer( query.getTypeName() );
         return new ShadoopFeatureSource( this, layer, dbo );
     }
 
@@ -443,8 +442,8 @@ public class ShadoopDataStore implements DataStore
     public ServiceInfo getInfo ()
     {
         DefaultServiceInfo info = new DefaultServiceInfo();
-        info.setTitle( "MongoDB Data Store" );
-        info.setDescription( "Features from MongoDB" );
+        info.setTitle( "Shadoop Data Store" );
+        info.setDescription( "Features from Shadoop" );
         try
         {
             info.setSchema( new URI( config.getNamespace() ) );
@@ -456,12 +455,12 @@ public class ShadoopDataStore implements DataStore
     }
 
     /**
-     * Gets the mongo layer.
+     * Gets the Shadoop layer.
      *
      * @param typeName the type name
-     * @return the mongo layer
+     * @return the Shadoop layer
      */
-    public ShadoopLayer getMongoLayer (String typeName)
+    public ShadoopLayer getShadoopLayer (String typeName)
     {
         ShadoopLayer layer = null;
         for (ShadoopLayer ml : layers)
