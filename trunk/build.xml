@@ -1,4 +1,10 @@
 <project name="gt-shadoop" xmlns:ivy="antlib:org.apache.ivy.ant">
 	<import file="build-b2wa.xml" />
 	
+	
+	<target name="dist" description="full distribution of jar... include manifest..." depends="jar">
+		<zip file="${dist.dir}/${ant.project.name}.jar" update="true" >
+			<zipfileset dir="${basedir}/META-INF" includes="**" prefix="META-INF" />
+		</zip>
+	</target>
 </project>

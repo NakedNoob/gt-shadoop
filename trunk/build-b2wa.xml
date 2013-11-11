@@ -5,7 +5,7 @@
 <project name="build-b2wa" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
 	<dirname property="imported.common.basedir" file="${ant.file.build-b2wa}"/>
 	<property file="${imported.common.basedir}/build-b2wa.properties" />
-	<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpath="${ivy.home}/${ivy.jar.name}"/>		
+	<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpath="${basedir}/${ivy.jar.name}"/>		
 
     
 	<!--
