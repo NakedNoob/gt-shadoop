@@ -21,7 +21,7 @@ public class ShadoopDataStoreFactory implements DataStoreFactorySpi
     private static final String FACTORY_DESCRIPTION  = "Shadoop GeoServer Plugin";
     
     /** The Constant FACTORY_DISPLAY_NAME. */
-    private static final String FACTORY_DISPLAY_NAME = "Shadoop";
+    private static final String FACTORY_DISPLAY_NAME = "Spatial Hadoop";
     
     /** Package logger. */
     static private final Logger log                  = ShadoopPluginConfig.getLog();

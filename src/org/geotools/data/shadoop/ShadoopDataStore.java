@@ -38,7 +38,6 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.geotools.data.shadoop.query.ShadoopCollection;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ShadoopDataStore.
  */
@@ -67,10 +66,15 @@ public class ShadoopDataStore implements DataStore
      */
     public ShadoopDataStore (ShadoopPluginConfig config)
     {
+    	log.info( "#####################################################" );
+    	log.info( "################ SHADOOP STARTING UP ################" );
+    	log.info( "#####################################################" );
+    	System.out.println( "#####################################################" );
+    	System.out.println( "################ SHADOOP STARTING UP ################" );
+    	System.out.println( "#####################################################" );
         this.config = config;
         lsnMgr = new FeatureListenerManager();
         layers = new ArrayList<ShadoopLayer>();
-        log.info( "ShadoopDataStore; layers=" + layers );
         try
         {
             crs = CRS.decode( "EPSG:4326" );
