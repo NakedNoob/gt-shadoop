@@ -26,7 +26,7 @@ public class Shadoop {
 	 */
 	public ShadoopDS getDS(String db) {
 		// TODO Auto-generated method stub
-		return null;
+		return new ShadoopDS();
 	}
 
 	/**
