@@ -1,7 +1,11 @@
 package org.geotools.data.shadoop;
 
+import java.io.Serializable;
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import org.geotools.data.ResourceInfo;
 import org.geotools.geometry.jts.ReferencedEnvelope;
@@ -19,6 +23,9 @@ public class ShadoopResourceInfo implements ResourceInfo
     
     /** The my uri. */
     private URI                myURI;
+    
+    /** Package logger. */
+    private final static Logger       log    = ShadoopPluginConfig.getLog();
 
     /**
      * Instantiates a new shadoop resource info.
@@ -27,6 +34,12 @@ public class ShadoopResourceInfo implements ResourceInfo
      */
     public ShadoopResourceInfo (ShadoopFeatureSource fs)
     {
+    	if(fs == null){
+    		log.warning("##### ShadoopFeatureSource was null in ShadoopResourceInfo Constructor #####");
+//    		ShadoopPluginConfig config = new ShadoopPluginConfig(new HashMap<String,Serializable>());
+//    		fs = new ShadoopFeatureSource(new ShadoopLayer("shadoop layer",config));
+    	}
+    	log.info("##### ShadoopFeatureSource : " + fs.toString());
         myFS = fs;
         myURI = URI.create( myFS.getLayer().getSchema().getName().getNamespaceURI() );
     }
@@ -98,6 +111,12 @@ public class ShadoopResourceInfo implements ResourceInfo
      */
     public String getTitle ()
     {
-        return myFS.getLayer().getSchema().getDescription().toString();
+    	if ( myFS.getLayer().getSchema().getDescription() != null) {
+    		return myFS.getLayer().getSchema().getDescription().toString();
+    	}
+    	log.info("Layer: " + myFS.getLayer().toString());
+    	log.info("Layer Schema: " + myFS.getLayer().getSchema().toString());
+    	log.info("Layer Schema Description: " + myFS.getLayer().getSchema().getDescription().toString());
+        return "Shadoop Resource Title" ;
     }
 }

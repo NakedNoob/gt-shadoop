@@ -99,58 +99,60 @@ public class ShadoopDataStore implements DataStore
     @SuppressWarnings({ "rawtypes", "unchecked" })
     private void getLayers ()
     {
+    	log.info("Getting Layers...." );
         Shadoop shadoop = null;
         try
         {
-            shadoop = new Shadoop( config );
-            ShadoopDS db = shadoop.getDS( config.getDB() ); // TODO add authentication
-            Set<String> colls = db.getCollectionNames();
-            for (String s : colls)
-            {
-                ShadoopCollection dbc = db.getCollection( s );
-                log.info( "getLayers; collection=" + dbc );
-                // find distinct non-null geometry to determine if valid layer
-                // TODO branch point for separate geometry-specific layers per collection
-                List geoList = dbc.distinct( "geometry.type" );
-                // distinct returns single BSON List, may barf if results large, > max doc. size
-                // trap exception on props distinct and assume it's valid since there's obviously
-                // something there (http://www.shadoopdb.org/display/DOCS/Aggregation)
-                List propList = null;
-                try
-                {
-                    propList = dbc.distinct( "properties" );
-                }
-                catch (Exception ex)
-                {
-                	System.out.println(ex.toString());
-                }
-                // check that layer has valid geometry and some properties defined
-                if (geoList != null && propList != null && propList.size() > 0)
-                {
-                    boolean hasValidGeo = false;
-                    for (GeometryType type : GeometryType.values())
-                    {
-                        if (geoList.contains( type.toString() ))
-                        {
-                            hasValidGeo = true;
-                            break;
-                        }
-                    }
-                    if (hasValidGeo)
-                    {
-                        layers.add( new ShadoopLayer( dbc, config ) );
-                    }
-                }
-            }
+//            shadoop = new Shadoop( config );
+//            ShadoopDS db = shadoop.getDS( config.getDB() ); // TODO add authentication
+//            Set<String> colls = db.getCollectionNames();
+//            for (String s : colls)
+//            {
+//                ShadoopCollection dbc = db.getCollection( s );
+//                log.info( "getLayers; collection=" + dbc );
+//                // find distinct non-null geometry to determine if valid layer
+//                // TODO branch point for separate geometry-specific layers per collection
+//                List geoList = dbc.distinct( "geometry.type" );
+//                // distinct returns single BSON List, may barf if results large, > max doc. size
+//                // trap exception on props distinct and assume it's valid since there's obviously
+//                // something there (http://www.shadoopdb.org/display/DOCS/Aggregation)
+//                List propList = null;
+//                try
+//                {
+//                    propList = dbc.distinct( "properties" );
+//                }
+//                catch (Exception ex)
+//                {
+//                	System.out.println(ex.toString());
+//                }
+//                // check that layer has valid geometry and some properties defined
+//                if (geoList != null && propList != null && propList.size() > 0)
+//                {
+//                    boolean hasValidGeo = false;
+//                    for (GeometryType type : GeometryType.values())
+//                    {
+//                        if (geoList.contains( type.toString() ))
+//                        {
+//                            hasValidGeo = true;
+//                            break;
+//                        }
+//                    }
+//                    if (hasValidGeo)
+//                    {
+                        layers.add( new ShadoopLayer( "Shadoop Layer 0001", config ) );
+//                    }
+//                }
+            //}
         }
         catch (Throwable t)
         {
-            log.severe( "getLayers error; " + t.getLocalizedMessage() );
+            log.severe( "getLayers error; " + t.getMessage());
+            t.printStackTrace();
         }
-        if (shadoop != null)
-        {
-            shadoop.close();
-        }
+//        if (shadoop != null)
+//        {
+//            shadoop.close();
+//        }
     }
 
     /**

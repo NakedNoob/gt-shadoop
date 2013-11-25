@@ -132,11 +132,14 @@ public class ShadoopLayer
      * @param coll the coll
      * @param config the config
      */
-    public ShadoopLayer (ShadoopCollection coll, ShadoopPluginConfig config)
+    public ShadoopLayer (String name, ShadoopPluginConfig config)
     {
+    	log.info( "ShadoopLayer; layerName " + name );
         this.config = config;
-        layerName = coll.getName();
-        log.fine( "ShadoopLayer; layerName " + layerName );
+        log.info("###### config:" + config.toString() + "######");
+//        layerName = coll.getName();
+        layerName = name;
+        
         keywords = new HashSet<String>();
         SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
         builder.setName( layerName );
@@ -146,7 +149,7 @@ public class ShadoopLayer
         b.setBinding( String.class );
         b.setName( "_id" );
         b.setNillable( false );
-        b.setDefaultValue( null );
+        b.setDefaultValue( "default ID" );
         b.setLength( 1024 );
         AttributeDescriptor a = b.buildDescriptor( "_id" );
         builder.add( a );
@@ -164,13 +167,14 @@ public class ShadoopLayer
         b = new AttributeTypeBuilder();
         b.setName( "geometry" );
         b.setNillable( false );
-        b.setDefaultValue( null );
+        b.setDefaultValue( new String("0,0") );
         b.setCRS( crs );
         // determine metadata for this collection
-        metaData = getCollectionModel( coll, buildRule );
+        //metaData = getCollectionModel( coll, buildRule );
         // determine geometry type
         //setGeometryType( metaData );
-
+        geometryType = GeometryType.Point;
+        log.info("###### b:" + geometryType.toString() + "######");
         switch (geometryType)
         {
         case GeometryCollection:
@@ -201,6 +205,7 @@ public class ShadoopLayer
         }
 
         a = b.buildDescriptor( "geometry" );
+        log.info("###### b:" + b.toString() + "######");
         builder.add( a );
 
         // Add the 2 known keywords...
@@ -280,12 +285,12 @@ public class ShadoopLayer
      * @param buildRule which rule to apply if same named fields with different types exist
      * @return JSON object describing collection record
      */
-    private BaseShadoopQueryObject getCollectionModel (ShadoopCollection coll, RecordBuilder buildRule)
-    {
-        BaseShadoopQueryObject qo = null;
-
-        return metaData;
-    }
+//    private BaseShadoopQueryObject getCollectionModel (ShadoopCollection coll, RecordBuilder buildRule)
+//    {
+//        BaseShadoopQueryObject qo = null;
+//
+//        return metaData;
+//    }
 
 
 
