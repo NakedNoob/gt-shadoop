@@ -112,11 +112,14 @@ public class ShadoopResourceInfo implements ResourceInfo
     public String getTitle ()
     {
     	if ( myFS.getLayer().getSchema().getDescription() != null) {
+    		log.info("Layer Schema Description: " + myFS.getLayer().getSchema().getDescription().toString());
     		return myFS.getLayer().getSchema().getDescription().toString();
     	}
     	log.info("Layer: " + myFS.getLayer().toString());
     	log.info("Layer Schema: " + myFS.getLayer().getSchema().toString());
-    	log.info("Layer Schema Description: " + myFS.getLayer().getSchema().getDescription().toString());
+//    	if (null != myFS.getLayer().getSchema().getDescription().toString()) {
+//    		log.info("Layer Schema Description: " + myFS.getLayer().getSchema().getDescription().toString());
+//    	}
         return "Shadoop Resource Title" ;
     }
 }

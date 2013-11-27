@@ -300,7 +300,7 @@ public class ShadoopLayer
     @Override
     public String toString ()
     {
-        return this.toString();
+        return super.toString(); // TODO
     }
 
 
