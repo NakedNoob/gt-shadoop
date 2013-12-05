@@ -10,26 +10,17 @@ import java.util.Date;
 
 import org.apache.hadoop.fs.Path;
 
+/**
+ * Query.java
+ * 
+ * Description: Query performs all of the tasks required to formulate a query,
+ * create a Process to run the query, save the results to a local filesystem,
+ * and return the pathname to the result file.
+ * 
+ * 
+ */
+
 public class Query {
-
-	private final String TXT_DATA = "/tmp/text/";
-	/**
-	 * User name on the hadoop system
-	 */
-	private final String USER = "gordon";
-	/**
-	 * Data directory to hold txt files for the wordcount
-	 */
-	private final String HDFS_DATA_DIR = "/user/" + USER + "/data/";
-	/**
-	 * Local file system temp directory
-	 */
-	private final String TMP = "/tmp";
-
-	/**
-	 * gt-shadoop temporary directory within the local /tmp
-	 */
-	private final String DIR = "/gt-shadoop";
 
 	/**
 	 * User defined name of each job. Output will be sent to a directory by this
@@ -39,15 +30,9 @@ public class Query {
 	private String jobName;
 
 	/**
-	 * String - prefixed with a timestamp, this is the default name the output
-	 * directory will be called after results are created.
-	 */
-	private final String DEFAULT_NAME = "_Results";
-
-	/**
 	 * HDFS Utility to perform basic duties in the hadoop file system
 	 */
-	private final HDFSadmin hdfs;
+	private HDFSadmin hdfs = null;
 
 	/**
 	 * Hadoop's Path
@@ -55,29 +40,14 @@ public class Query {
 	Path hadoopPath = null;
 
 	/**
-	 * Used in reference to the HDFS filesystem
-	 */
-	private final String hdfsHome = "/user/gordon/";
-
-	/**
-	 * Used in reference to the ext* filesystem
-	 */
-	private final String hadoopMainDir = "/home/gordon/hadoop-s1.0.1/";
-
-	/**
-	 * Used in reference to the ext* filesystem
-	 */
-	private final String hadoopBinDir = hadoopMainDir + "bin/";
-
-	/**
-	 * ProcessBuilder
-	 */
-	// private final ProcessBuilder process = null;
-
-	/**
 	 * StringBuilder to contain the data from the output of the process
 	 */
 	private final StringBuilder bufferOut = new StringBuilder();
+
+	/**
+	 * Configuration file for usernames and pathnames of the current system.
+	 */
+	private HConfig config = null;
 
 	/**
 	 * Constructor
@@ -85,6 +55,7 @@ public class Query {
 	 * @throws IOException
 	 */
 	public Query() throws IOException {
+		config = new HConfig();
 		try {
 			hdfs = new HDFSadmin();
 		} catch (IOException e) {
@@ -96,23 +67,19 @@ public class Query {
 	 * This checks to see if this directory already exists. If a job is
 	 * attempted with an existing directory as it's target, it will fail.
 	 * 
-	 * @param pName
+	 * @param Name
+	 *            of the job to be tested.
 	 * @return True if directory doesn't exist. False if the directory already
 	 *         exists.
 	 */
 	private boolean nameValid(String pName) {
 		boolean result = false;
 
-		// This will need the HDFSClient to check on the existence of the
-		// directory
-		// before setting the name.
-
 		try {
-			if (!hdfs.ifExists(new Path(hdfsHome + pName))) {
+			if (!hdfs.ifExists(new Path(config.getHdfsHomeDir() + pName))) {
 				result = true;
-				System.out.printf("\nDirectory name is valid.");
 				jobName = pName;
-				hadoopPath = new Path(hdfsHome + pName);
+				hadoopPath = new Path(config.getHdfsHomeDir() + pName);
 			}
 		} catch (IOException e) {
 			System.err.printf("\nDirectory '%s' exists.  Choose another name.");
@@ -123,45 +90,46 @@ public class Query {
 	}
 
 	/**
-	 * Get the job name. This will be the output directory at the completion of
-	 * the job.
+	 * Runs the range query job using four integers as bounding box parameters
+	 * for the requested data.
 	 * 
-	 * @return The name of the current job.
-	 */
-	public String getName() {
-		if (jobName.isEmpty()) {
-			return "No name is set.\n";
-		}
-		return jobName;
-	}
-
-	/**
-	 * The Range Query, for returning spatial data. Assumes ranges passed to it
-	 * are valid range values.
-	 * 
-	 * @return True if no exceptions were detected
+	 * @param a
+	 *            - box coordinate
+	 * @param b
+	 *            - box coordinate
+	 * @param c
+	 *            - box coordinate
+	 * @param d
+	 *            - box coordinate
+	 * @return Full path of the filename containing the results
 	 * @throws InterruptedException
 	 */
-	public boolean runRangeQuery(int a, int b, int c, int d)
+	public String runRangeQuery(int a, int b, int c, int d)
 			throws InterruptedException {
-		boolean result = false;
+		String result = "";
 		jobName = generateName();
 
 		// form the string command
 		StringBuilder cmd = new StringBuilder();
 
-		cmd.append("bin/hadoop jar hadoop-operations-s1.0.1.jar ");
+		cmd.append("bin/hadoop jar hadoop-operations-*.jar ");
 		cmd.append(String.format("rangequery points %s ", jobName));
 		cmd.append(String.format("rect:%d,%d,%d,%d ", a, b, c, d));
 		cmd.append("shape:point -overwrite");
 
-		// StringBuilder cmd2 = new StringBuilder("ls /");
-
+		// run the command
 		try {
 			runCommand(cmd.toString());
-			result = true;
+			// get the results
+			result = getResults();
+
 		} catch (Exception e) {
 			System.err.printf("\nError: %s", e.getMessage());
+			result = null;
+		}
+		// delete the hdfs results directory
+		if (!deleteResultsHDFS(config.getHdfsHomeDir() + jobName)) {
+			System.out.printf("\nHDFS Directory not deleted.");
 		}
 
 		return result;
@@ -174,31 +142,31 @@ public class Query {
 	 * 
 	 * @return
 	 */
-	public boolean runWordCount(String pTxtFile) {
-		boolean result = false;
+	public String runWordCount(String pTxtFile) {
+		String result = "";
 		StringBuilder cmd = new StringBuilder();
 
-		String hdfsPathName = HDFS_DATA_DIR + pTxtFile;
+		String hdfsPathName = config.getHdfsDataDir() + pTxtFile;
 
 		// Check to see if the txt file exists in the ext file system
-		File input = new File(TXT_DATA + pTxtFile);
+		File input = new File(config.getLocalDataSource() + pTxtFile);
 		Path outPath = new Path(hdfsPathName);
 
 		if (!input.exists()) {
 			System.err.printf("\n'%s' does not exist", input.getAbsolutePath());
-			return result;
+			return null;
 		} else {
 			System.out.printf("\n'%s' exists, copying to hdfs...",
 					input.getAbsolutePath());
 			// file exists, now transfer it to the hdfs data directory
 			try {
-				if (!hdfs.ifExists(new Path(HDFS_DATA_DIR))) {
+				if (!hdfs.ifExists(new Path(config.getHdfsDataDir()))) {
 					System.out.printf("\n *** '%s' does NOT exist in hdfs\n",
-							HDFS_DATA_DIR);
+							config.getHdfsDataDir());
 
-					if (hdfs.mkdir(HDFS_DATA_DIR)) {
+					if (hdfs.mkdir(config.getHdfsDataDir())) {
 						System.err.printf("\n'%s' was not created",
-								HDFS_DATA_DIR);
+								config.getHdfsDataDir());
 						// return result;
 					}
 				}
@@ -229,16 +197,13 @@ public class Query {
 		jobName = generateName();
 		cmd.append(jobName);
 
-		try {
-			runCommand(cmd.toString());
-			result = true;
-		} catch (Exception e) {
-			System.err.printf("\nError: %s", e.getMessage());
+		if (runCommand(cmd.toString()) == 0) {
+			result = config.getOutputDir() + "/" + jobName;
 		}
 
 		System.out.printf("\nResults: \n%s", getResults());
 
-		if (!deleteResultsHDFS(hdfsHome + jobName)) {
+		if (!deleteResultsHDFS(config.getHdfsHomeDir() + jobName)) {
 			System.out.printf("\nHDFS Directory not deleted.");
 		}
 
@@ -247,19 +212,14 @@ public class Query {
 
 	/**
 	 * Get the results file, copies it to /tmp/gt-shadoop and returns the
-	 * contents as a string
+	 * pathname.
 	 * 
-	 * @return String of the contents of the result file
+	 * @return Full path and filename of the results file
 	 */
 	private String getResults() {
-		StringBuilder buffer = new StringBuilder();
-		File tmpDir = new File(TMP + DIR);
+		File tmpDir = new File(config.getOutputDir());
 		// Make sure local temporary directory exists
-		if (!new File(TMP).exists()) {
-			// create if it doesn't exist
-			tmpDir.mkdir();
-			// check for the existence of a /TMP/DIR directory
-		} else if (!tmpDir.exists()) {
+		if (!tmpDir.exists()) {
 			// create if it doesn't exist
 			tmpDir.mkdir();
 		}
@@ -270,19 +230,15 @@ public class Query {
 		// Not needed at this time
 		String fileName = tmpDir.getAbsolutePath() + "/" + jobName + ".txt";
 		try {
-			hdfs.copyToLocal(hdfsHome + jobName + "/part-r-00000", fileName);
+			hdfs.copyToLocal(config.getHdfsHomeDir() + jobName + "/part-00000",
+					fileName);
+
 		} catch (IOException e) {
-			System.err.printf("\nError, getResults(): %s", e.getMessage());
+			// set filename to null
+			fileName = null;
 		}
 
-		try {
-			buffer.append(readFile(fileName));
-		} catch (IOException e) {
-			System.err.printf("\nError: %s", e.getMessage());
-			buffer.setLength(0);
-		}
-
-		return buffer.toString();
+		return fileName;
 	}
 
 	/**
@@ -331,7 +287,7 @@ public class Query {
 
 		name.append(sdf.format(date));
 
-		name.append(DEFAULT_NAME);
+		name.append(config.getDefaultOutputName());
 		return name.toString();
 	}
 
@@ -344,8 +300,8 @@ public class Query {
 	 */
 	private boolean deleteResultsHDFS(String pName) {
 		boolean result = false;
-		// TODO - delete the resulting contents and directory 'jobName'
-		String fileName = hdfsHome + jobName;
+
+		String fileName = config.getHdfsHomeDir() + jobName;
 		try {
 			result = hdfs.deleteFile(fileName);
 		} catch (IOException e) {
@@ -355,33 +311,38 @@ public class Query {
 	}
 
 	/**
-	 * Actually executes the command from the given command line
+	 * Executes the command by creating a Process, and waiting for its
+	 * completion.
 	 * 
-	 * @param pCmdLine
+	 * @param Command
+	 *            line to be run in the bash shell.
+	 * @return Exit status of the process. Return of '0' indicates successful.
+	 *         Return of '-1' indicates an exception has been thrown. Non-zero
+	 *         positive number means a problem occurred during execution of the
+	 *         shell.
 	 */
-	private void runCommand(String pCmdLine) throws Exception {
-		// ProcessBuilder pb = new ProcessBuilder("bash", "-c", "ls");
+	private int runCommand(String pCmdLine) {
+		int result = -1;
 		ProcessBuilder pb = new ProcessBuilder("bash", "-c", pCmdLine);
-		pb.directory(new File("/home/gordon/hadoop-s1.0.1"));
+		pb.directory(new File(config.getLocalHadoopDir()));
 		pb.redirectErrorStream(true);
 
 		StringBuilder response = new StringBuilder();
 
-		BufferedReader br = null;
 		try {
 			Process shell = pb.start();
 			InputStream shellIn = shell.getInputStream();
 			response.append(convertStreamToStr(shellIn));
-			int shellExitStatus = shell.waitFor();
-			System.out.printf("\n\n\tExit Status " + shellExitStatus + "\n");
+			result = shell.waitFor();
 
-			// System.out.printf(response.toString());
 			shellIn.close();
 
 		} catch (IOException e) {
-			throw new IOException(String.format("ERROR in runCommand(): %s",
-					e.getMessage()));
+			// do nothing
+		} catch (InterruptedException e) {
+			// do nothing
 		}
+		return result;
 	}
 
 	/**
