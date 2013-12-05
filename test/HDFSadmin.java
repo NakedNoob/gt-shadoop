@@ -19,6 +19,7 @@ import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 
 public class HDFSadmin {
 
+	HConfig config = new HConfig();
 	/**
 	 * Empty filename created upon completion of a hadoop job. It is present in
 	 * the output directory.
@@ -28,17 +29,20 @@ public class HDFSadmin {
 	/**
 	 * Path to the core-site.xml
 	 */
-	private final String coreSiteCfg = "/home/gordon/hadoop-s1.0.1/conf/core-site.xml";
+	private final String coreSiteCfg = config.getLocalHadoopDir()
+			+ "/conf/core-site.xml";
 
 	/**
 	 * Path to the hdfs-site.xml
 	 */
-	private final String hdfsSiteCfg = "/home/gordon/hadoop-s1.0.1/conf/hdfs-site.xml";
+	private final String hdfsSiteCfg = config.getLocalHadoopDir()
+			+ "/conf/hdfs-site.xml";
 
 	/**
 	 * Path to the mapred-site.xml
 	 */
-	private final String mapredSiteCfg = "/home/gordon/hadoop-s1.0.1/conf/mapred-site.xml";
+	private final String mapredSiteCfg = config.getLocalHadoopDir()
+			+ "/hadoop-s1.0.1/conf/mapred-site.xml";
 
 	/**
 	 * Constructor
@@ -462,94 +466,4 @@ public class HDFSadmin {
 
 		return result;
 	}
-
-	// public static void main(String[] args) throws IOException {
-	//
-	// if (args.length < 1) {
-	// printUsage();
-	// System.exit(1);
-	// }
-	//
-	// HDFSadmin client = new HDFSadmin();
-	// if (args[0].equals("add")) {
-	// if (args.length < 3) {
-	// System.out.println("Usage: hdfsclient add <local_path> "
-	// + "<hdfs_path>");
-	// System.exit(1);
-	// }
-	// client.addFile(args[1], args[2]);
-	//
-	// } else if (args[0].equals("read")) {
-	// if (args.length < 2) {
-	// System.out.println("Usage: hdfsclient read <hdfs_path>");
-	// System.exit(1);
-	// }
-	// client.readFile(args[1]);
-	//
-	// } else if (args[0].equals("delete")) {
-	// if (args.length < 2) {
-	// System.out.println("Usage: hdfsclient delete <hdfs_path>");
-	// System.exit(1);
-	// }
-	//
-	// client.deleteFile(args[1]);
-	// } else if (args[0].equals("mkdir")) {
-	// if (args.length < 2) {
-	// System.out.println("Usage: hdfsclient mkdir <hdfs_path>");
-	// System.exit(1);
-	// }
-	//
-	// client.mkdir(args[1]);
-	// } else if (args[0].equals("copyfromlocal")) {
-	// if (args.length < 3) {
-	// System.out
-	// .println("Usage: hdfsclient copyfromlocal <from_local_path> <to_hdfs_path>");
-	// System.exit(1);
-	// }
-	//
-	// client.copyFromLocal(args[1], args[2]);
-	// } else if (args[0].equals("rename")) {
-	// if (args.length < 3) {
-	// System.out
-	// .println("Usage: hdfsclient rename <old_hdfs_path> <new_hdfs_path>");
-	// System.exit(1);
-	// }
-	//
-	// client.renameFile(args[1], args[2]);
-	// } else if (args[0].equals("copytolocal")) {
-	// if (args.length < 3) {
-	// System.out
-	// .println("Usage: hdfsclient copytolocal <from_hdfs_path> <to_local_path>");
-	// System.exit(1);
-	// }
-	//
-	// client.copyToLocal(args[1], args[2]);
-	// } else if (args[0].equals("modificationtime")) {
-	// if (args.length < 2) {
-	// System.out
-	// .println("Usage: hdfsclient modificationtime <hdfs_path>");
-	// System.exit(1);
-	// }
-	//
-	// client.getModificationTime(args[1]);
-	// } else if (args[0].equals("getblocklocations")) {
-	// if (args.length < 2) {
-	// System.out
-	// .println("Usage: hdfsclient getblocklocations <hdfs_path>");
-	// System.exit(1);
-	// }
-	//
-	// client.getBlockLocations(args[1]);
-	// } else if (args[0].equals("gethostnames")) {
-	//
-	// client.getHostnames();
-	// } else {
-	//
-	// printUsage();
-	// System.exit(1);
-	// }
-	//
-	// System.out.println("Done!");
-	// }
-
 }
