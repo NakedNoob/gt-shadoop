@@ -6,6 +6,7 @@ public class Main {
 	public static void main(String[] args) {
 		System.out.printf("Hello!\n");
 
+		String outputName = "";
 		Query query = null;
 		try {
 			query = new Query();
@@ -13,7 +14,7 @@ public class Main {
 			System.err.printf("\nError creating query: %s", e.getMessage());
 			System.exit(0);
 		}
- 
+
 		/*
 		 * Simple menu system
 		 */
@@ -33,7 +34,7 @@ public class Main {
 			case 1:
 				System.out.printf("\n\nEnter a text filename: ");
 				String fileName = input.next();
-				query.runWordCount(fileName);
+				outputName = query.runWordCount(fileName);
 				break;
 			case 2:
 				System.out
@@ -47,34 +48,20 @@ public class Main {
 					i++;
 				}
 				try {
-					query.runRangeQuery(num[0], num[1], num[2], num[3]);
+					outputName = query.runRangeQuery(num[0], num[1], num[2],
+							num[3]);
 				} catch (InterruptedException e) {
 					System.err.printf("\nError: %s", e.getMessage());
+					outputName = "";
 				}
 				break;
 			default: // do nothing
 				break;
 			}
 
+			System.out.printf("\nResults stored in: %s", outputName);
+			outputName = "";
 		}
-
-		/*
-		 * Code above this is testing
-		 */
-
-		// query.runWordCount("babbage.txt");
-		// TODO - remove this after testing
-
-		// try {
-		// if (query.runRangeQuery(0, 0, 130, 130)) {
-		// System.out.printf("\nQuery succeeded!");
-		// } else {
-		// System.err.printf("\nQuery failed.");
-		// }
-		// } catch (InterruptedException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-
+		input.close();
 	}
 }
