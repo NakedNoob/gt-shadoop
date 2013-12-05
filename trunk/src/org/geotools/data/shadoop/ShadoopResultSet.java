@@ -5,38 +5,22 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.Vector;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.geotools.data.DataUtilities;
 import org.geotools.data.shadoop.ShadoopLayer.GeometryType;
 import org.geotools.data.shadoop.query.BaseShadoopQueryObject;
-import org.geotools.data.shadoop.query.DSCursor;
 import org.geotools.data.shadoop.query.DSObject;
 import org.geotools.data.shadoop.query.Shadoop;
-import org.geotools.data.shadoop.query.ShadoopCollection;
-import org.geotools.data.shadoop.query.ShadoopDS;
-import org.geotools.data.simple.SimpleFeatureCollection;
-import org.geotools.feature.FeatureCollections;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.geometry.jts.JTSFactoryFinder;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
-import org.opengis.filter.identity.ObjectId;
-
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.CoordinateSequence;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.geom.PrecisionModel;
 
 // TODO: Auto-generated Javadoc
@@ -111,9 +95,7 @@ public class ShadoopResultSet
         try 
         {
 	        File file = new File("C:\\Documents and Settings\\j16727\\gt-shadoop\\src\\points.txt");
-	
-	        // http://docs.geotools.org/latest/tutorials/feature/csv2shp.html
-	//        final SimpleFeatureType TYPE = DataUtilities.createType("Location", "location:Point:srid=4326");
+	        // TODO - change the above to whatever Gordon outputs
 	        
 	        // http://sourceforge.net/mailarchive/message.php?msg_id=31504683
 	        SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
@@ -124,7 +106,6 @@ public class ShadoopResultSet
 	        
 	        GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory(null);
 	        SimpleFeatureBuilder featureBuilder = new SimpleFeatureBuilder(TYPE);
-	//        List<SimpleFeature> features = new ArrayList<SimpleFeature>();
 	        
 	        BufferedReader reader = new BufferedReader(new FileReader(file));
 	        
@@ -157,6 +138,7 @@ public class ShadoopResultSet
         	log.severe(ioe.toString());
         }
 
+        // The below WILL NOT WORK for GeoServer's Layer Preview
 //        try
 //        {
 //            if (layer.getGeometryType() == null)
@@ -166,7 +148,7 @@ public class ShadoopResultSet
 //            shadoop = new Shadoop( layer.getConfig() );
 //            ShadoopDS db = shadoop.getDS( layer.getConfig().getDB() );
 //            ShadoopCollection coll = db.getCollection( layer.getName() );
-//            DSCursor cur = coll.find( query );
+//            DSCursor cur = coll.find( query );  // That ShadoopCollection find method is the key. That is where your 'request' logic is truly implemented.
 //            minX = 180;
 //            maxX = -180;
 //            minY = 90;
@@ -211,6 +193,10 @@ public class ShadoopResultSet
 //            		i++;
 //            	}
 //            } 
+//	        catch (IOException ioe)
+//	        {
+//	        	log.severe(ioe.toString());
+//	        }
 //            finally 
 //            {
 //            	reader.close();

@@ -181,6 +181,12 @@ public class ShadoopFeatureSource implements SimpleFeatureSource {
 		Filter filter = query.getFilter();
 		BaseShadoopQueryObject dbo = (BaseShadoopQueryObject) filter.accept(
 				f2m, null);
+
+        System.out.println("############################################# START" + 
+        		"\nfilter: " + filter.toString());
+        // TODO - This is where GeoServer goes through for OpenLayers. 
+
+        System.out.println("############################################# END");
 		ShadoopResultSet rs = new ShadoopResultSet(layer, dbo);
 		// check for paging; maxFeatures and/or startIndex
 		int maxFeatures = query.getMaxFeatures();
