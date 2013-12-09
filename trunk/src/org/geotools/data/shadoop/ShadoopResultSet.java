@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import org.geotools.data.shadoop.ShadoopLayer.GeometryType;
 import org.geotools.data.shadoop.query.BaseShadoopQueryObject;
 import org.geotools.data.shadoop.query.DSObject;
+import org.geotools.data.shadoop.query.Query;
 import org.geotools.data.shadoop.query.Shadoop;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
@@ -32,6 +33,9 @@ public class ShadoopResultSet
 
     /** The layer. */
     private ShadoopLayer                   layer      = null;
+    
+    /** The points information. */
+    private int[] 							points	= null;
     
     /** The features. */
     private ArrayList<SimpleFeature>     features   = null;
@@ -78,6 +82,27 @@ public class ShadoopResultSet
     }
 
     /**
+     * Instantiates a new shadoop result set.
+     *
+     * @param layer the layer
+     * @param query the query
+     * @param points the BBOX info
+     */
+    public ShadoopResultSet (ShadoopLayer layer, BaseShadoopQueryObject query, int[] points)
+    {
+        this.layer = layer;
+        this.points = points;
+        bounds = new ReferencedEnvelope( 0, 0, 0, 0, layer.getCRS() );
+        features = new ArrayList<SimpleFeature>();
+        if (query != null){
+        	if(points[4] == 1)
+        		buildFeatures( query );
+        	else
+        		System.out.println("Query cannot be processed: Coordinates are either the same or contain negative values");
+        }
+    }
+    
+    /**
      * Build features for given layer; convert shadoop collection records to equivalent geoTools
      * SimpleFeatureBuilder.
      *
@@ -91,13 +116,16 @@ public class ShadoopResultSet
             return;
         }
         Shadoop shadoop = null;
-        
+        String filePath = "";
         try 
         {
-	        File file = new File("C:\\Documents and Settings\\j16727\\gt-shadoop\\src\\points.txt");
-	        // TODO - change the above to whatever Gordon outputs
-	        
-	        // http://sourceforge.net/mailarchive/message.php?msg_id=31504683
+        	Query q = new Query();
+        	try {
+				filePath = q.runRangeQuery(points[0], points[1], points[2], points[3]);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+	        File file = new File(filePath);
 	        SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
 	        builder.setName("Location");
 	        builder.setSRS("EPSG:4326");
