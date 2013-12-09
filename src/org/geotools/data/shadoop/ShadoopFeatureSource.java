@@ -16,6 +16,7 @@ import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.Name;
 import org.opengis.filter.Filter;
+import org.opengis.filter.spatial.BBOX;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -187,7 +188,9 @@ public class ShadoopFeatureSource implements SimpleFeatureSource {
         // TODO - This is where GeoServer goes through for OpenLayers. 
 
         System.out.println("############################################# END");
-		ShadoopResultSet rs = new ShadoopResultSet(layer, dbo);
+        int pointsInfo[] = CoordUtil.extract(filter.toString().trim());
+        
+		ShadoopResultSet rs = new ShadoopResultSet(layer, dbo, pointsInfo);
 		// check for paging; maxFeatures and/or startIndex
 		int maxFeatures = query.getMaxFeatures();
 		if (maxFeatures > 0) {
