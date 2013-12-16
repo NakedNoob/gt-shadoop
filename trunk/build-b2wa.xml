@@ -79,28 +79,33 @@
 		BUILD SECTION (JAVA ONLY)
 	-->
 	
-	 <!--  build -->
-	 <target name="build" depends="init" description="Compile binary classes with dependencies." >
-	 	<ivy:cachepath pathid="ivy.cache.classpath"/>
-	 	<antcall target="echo-classpath"/>
-		<!--<ivy:cachepath organisation="b2wa" module="b2wa-ivy-template" revision="1.0" inline="true" pathid="ivy.cache.classpath"/>-->
+    <!--  build -->
+    <target name="build" depends="init" description="Compile binary classes with dependencies." >
+         <ivy:cachepath pathid="ivy.cache.classpath"/>
+         <antcall target="echo-classpath"/>
+          <!--<ivy:cachepath organisation="b2wa" module="b2wa-ivy-template" revision="1.0" inline="true" pathid="ivy.cache.classpath"/>-->
+           <path id="lib.path">
+             <fileset dir="${basedir}/lib" includes="*.jar"/>
+           </path>
+         
+          <javac srcdir="${src.dir}" target="1.6" source="1.6" destdir="${classes.dir}" debug="true" failonerror="true">
+               <classpath refid="lib.path" />
+                <classpath refid="ivy.cache.classpath" />
+          </javac>
+          <copy todir="${classes.dir}">
+                <fileset dir="${src.dir}" includes="**/*.tasks,**/*.properties,**/*.dat,**/*.xml"/>
+          </copy>
+          
+          <javac srcdir="${test.dir}" target="1.6" source="1.6" destdir="${test.classes.dir}" debug="true" failonerror="true">
+                <classpath refid="lib.path" />
+                <classpath path="${classes.dir}" />
+                <classpath refid="ivy.cache.classpath" />
+          </javac>
+          <copy todir="${test.classes.dir}">
+                <fileset dir="${test.dir}" includes="**/*.tasks,**/*.properties,**/*.dat,**/*.xml"/>
+          </copy>
+    </target>
 
-	 	
-	 	<javac srcdir="${src.dir}" target="1.6" source="1.6" destdir="${classes.dir}" debug="true" failonerror="true">
-			<classpath refid="ivy.cache.classpath" />
-		</javac>
-		<copy todir="${classes.dir}">
-			<fileset dir="${src.dir}" includes="**/*.tasks,**/*.properties,**/*.dat,**/*.xml"/>
-		</copy>
-		
-		<javac srcdir="${test.dir}" target="1.6" source="1.6" destdir="${test.classes.dir}" debug="true" failonerror="true">
-	 		<classpath path="${classes.dir}" />
-			<classpath refid="ivy.cache.classpath" />
-		</javac>
-		<copy todir="${test.classes.dir}">
-			<fileset dir="${test.dir}" includes="**/*.tasks,**/*.properties,**/*.dat,**/*.xml"/>
-		</copy>
-	 </target>
 
 
    <target name="jar" depends="build">
