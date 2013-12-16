@@ -139,7 +139,7 @@ public class ShadoopResultSet
         	log.warning( "################################" );
         	log.warning( "################################" );
         	log.warning( "################################" );
-	        File file = new File("C:\\Documents and Settings\\j16727\\gt-shadoop\\src\\points2.txt");
+	        File file = new File(filePath);
 	        SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
 	        builder.setName("Location");
 	        builder.setSRS("EPSG:4326");
