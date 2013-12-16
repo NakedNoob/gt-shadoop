@@ -17,9 +17,7 @@ import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.Name;
 import org.opengis.filter.Filter;
-import org.opengis.filter.spatial.BBOX;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ShadoopFeatureSource.
  */
@@ -33,9 +31,6 @@ public class ShadoopFeatureSource implements SimpleFeatureSource {
 	
 	/** The results. */
 	private ShadoopResultSet results = null;
-	
-	/** The query caps. */
-	private ShadoopQueryCapabilities queryCaps = new ShadoopQueryCapabilities();
 	
 	/** The info. */
 	private ShadoopResourceInfo info = null;
@@ -313,15 +308,6 @@ public class ShadoopFeatureSource implements SimpleFeatureSource {
 	}
 
 	/**
-	 * Gets the query capabilities.
-	 *
-	 * @return the query capabilities
-	 */
-	public QueryCapabilities getQueryCapabilities() {
-		return queryCaps;
-	}
-
-	/**
 	 * Gets the info.
 	 *
 	 * @return the info
@@ -337,5 +323,10 @@ public class ShadoopFeatureSource implements SimpleFeatureSource {
 	 */
 	public Name getName() {
 		return layer.getSchema().getName();
+	}
+
+	@Override
+	public QueryCapabilities getQueryCapabilities() {
+		return null;
 	}
 }

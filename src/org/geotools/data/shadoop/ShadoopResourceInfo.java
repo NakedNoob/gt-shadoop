@@ -1,9 +1,6 @@
 package org.geotools.data.shadoop;
 
-import java.io.Serializable;
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -11,7 +8,6 @@ import org.geotools.data.ResourceInfo;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ShadoopResourceInfo.
  */
@@ -32,8 +28,7 @@ public class ShadoopResourceInfo implements ResourceInfo
      *
      * @param fs the fs
      */
-    public ShadoopResourceInfo (ShadoopFeatureSource fs)
-    {
+    public ShadoopResourceInfo (ShadoopFeatureSource fs){
     	if(fs == null){
     		log.warning("##### ShadoopFeatureSource was null in ShadoopResourceInfo Constructor #####");
 //    		ShadoopPluginConfig config = new ShadoopPluginConfig(new HashMap<String,Serializable>());
@@ -50,8 +45,7 @@ public class ShadoopResourceInfo implements ResourceInfo
      *
      * @return the crs
      */
-    public CoordinateReferenceSystem getCRS ()
-    {
+    public CoordinateReferenceSystem getCRS (){
         return myFS.getLayer().getCRS();
     }
 
@@ -60,8 +54,7 @@ public class ShadoopResourceInfo implements ResourceInfo
      *
      * @return the bounds
      */
-    public ReferencedEnvelope getBounds ()
-    {
+    public ReferencedEnvelope getBounds (){
         return myFS.getBounds();
     }
 
@@ -70,8 +63,7 @@ public class ShadoopResourceInfo implements ResourceInfo
      *
      * @return the schema
      */
-    public URI getSchema ()
-    {
+    public URI getSchema (){
         return myURI;
     }
 
@@ -80,8 +72,7 @@ public class ShadoopResourceInfo implements ResourceInfo
      *
      * @return the name
      */
-    public String getName ()
-    {
+    public String getName (){
         return myFS.getLayer().getName();
     }
 
@@ -90,8 +81,7 @@ public class ShadoopResourceInfo implements ResourceInfo
      *
      * @return the description
      */
-    public String getDescription ()
-    {
+    public String getDescription (){
         return "Shadoop Resource";
     }
 
@@ -100,8 +90,7 @@ public class ShadoopResourceInfo implements ResourceInfo
      *
      * @return the keywords
      */
-    public Set<String> getKeywords ()
-    {
+    public Set<String> getKeywords (){
         return myFS.getLayer().getKeywords();
     }
 
@@ -110,17 +99,13 @@ public class ShadoopResourceInfo implements ResourceInfo
      *
      * @return the title
      */
-    public String getTitle ()
-    {
+    public String getTitle (){
     	if ( myFS.getLayer().getSchema().getDescription() != null) {
     		log.info("Layer Schema Description: " + myFS.getLayer().getSchema().getDescription().toString());
     		return myFS.getLayer().getSchema().getDescription().toString();
     	}
     	log.info("Layer: " + myFS.getLayer().toString());
     	log.info("Layer Schema: " + myFS.getLayer().getSchema().toString());
-//    	if (null != myFS.getLayer().getSchema().getDescription().toString()) {
-//    		log.info("Layer Schema Description: " + myFS.getLayer().getSchema().getDescription().toString());
-//    	}
         return "Shadoop Resource Title" ;
     }
 }

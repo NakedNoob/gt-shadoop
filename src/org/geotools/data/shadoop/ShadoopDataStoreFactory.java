@@ -10,7 +10,6 @@ import java.util.logging.Logger;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFactorySpi;
 
-// TODO: Auto-generated Javadoc
 /**
  * A factory for creating ShadoopDataStore objects.
  */
@@ -32,8 +31,7 @@ public class ShadoopDataStoreFactory implements DataStoreFactorySpi
      * @param map the map
      * @return the data store
      */
-    public DataStore createNewDataStore (Map<String, Serializable> map)
-    {
+    public DataStore createNewDataStore (Map<String, Serializable> map){
         return createDataStore( map );
     }
 
@@ -43,8 +41,7 @@ public class ShadoopDataStoreFactory implements DataStoreFactorySpi
      * @param params the params
      * @return the data store
      */
-    public DataStore createDataStore (Map<String, Serializable> params)
-    {
+    public DataStore createDataStore (Map<String, Serializable> params){
         DataStore theStore = null;
         log.info( "DataStore.createDataStore()" );
         try
@@ -65,8 +62,7 @@ public class ShadoopDataStoreFactory implements DataStoreFactorySpi
      *
      * @return true, if is available
      */
-    public boolean isAvailable ()
-    {
+    public boolean isAvailable (){
         boolean result = false;
         try
         {
@@ -87,17 +83,13 @@ public class ShadoopDataStoreFactory implements DataStoreFactorySpi
      * @param params the params
      * @return true, if successful
      */
-    public boolean canProcess (Map<String, Serializable> params)
-    {
-
+    public boolean canProcess (Map<String, Serializable> params){
         boolean result = true;
 
-        try
-        {
+        try{
             new ShadoopPluginConfig( params );
         }
-        catch (ShadoopPluginException e)
-        {
+        catch (ShadoopPluginException e){
             result = false;
         }
 
@@ -109,8 +101,7 @@ public class ShadoopDataStoreFactory implements DataStoreFactorySpi
      *
      * @return the parameters info
      */
-    public DataStoreFactorySpi.Param[] getParametersInfo ()
-    {
+    public DataStoreFactorySpi.Param[] getParametersInfo (){
         List<Param> params = ShadoopPluginConfig.getPluginParams();
         return params.toArray( new Param[params.size()] );
     }
@@ -120,8 +111,7 @@ public class ShadoopDataStoreFactory implements DataStoreFactorySpi
      *
      * @return the description
      */
-    public String getDescription ()
-    {
+    public String getDescription (){
         return FACTORY_DESCRIPTION;
     }
 
@@ -130,8 +120,7 @@ public class ShadoopDataStoreFactory implements DataStoreFactorySpi
      *
      * @return the display name
      */
-    public String getDisplayName ()
-    {
+    public String getDisplayName (){
         return FACTORY_DISPLAY_NAME;
     }
 
@@ -140,8 +129,7 @@ public class ShadoopDataStoreFactory implements DataStoreFactorySpi
      *
      * @return the implementation hints
      */
-    public Map<RenderingHints.Key, ?> getImplementationHints ()
-    {
+    public Map<RenderingHints.Key, ?> getImplementationHints (){
         return Collections.emptyMap();
     }
 }

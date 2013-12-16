@@ -9,13 +9,11 @@ import java.util.logging.Logger;
 import org.geotools.data.DataAccessFactory.Param;
 import org.geotools.util.logging.Logging;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ShadoopPluginConfig.
  */
 public class ShadoopPluginConfig
 {
-	// AJG - Review all of these parameters to make sure these are needed
     /** The Constant SHADOOP_HOST_PARAM. */
 	private final static String SHADOOP_HOST_PARAM    = "shadoop_host";
     
@@ -56,10 +54,8 @@ public class ShadoopPluginConfig
      *
      * @return the plugin params
      */
-    public static List<Param> getPluginParams ()
-    {
-        if (shadoopParams == null)
-        {
+    public static List<Param> getPluginParams (){
+        if (shadoopParams == null){
             shadoopParams = new ArrayList<Param>();
             shadoopParams.add( new Param( NAMESPACE_PARAM, String.class,
                                         "Namespace associated with this data store", false ) );
@@ -79,44 +75,37 @@ public class ShadoopPluginConfig
      * @param params the params
      * @throws ShadoopPluginException the shadoop plugin exception
      */
-    public ShadoopPluginConfig (Map<String, Serializable> params) throws ShadoopPluginException
-    {
+    public ShadoopPluginConfig (Map<String, Serializable> params) throws ShadoopPluginException{
         String msg = "SHADOOP Plugin Configuration Error";
 
-        try
-        {
+        try{
             String param = params.get( NAMESPACE_PARAM ).toString();
-            if (param == null)
-            {
+            if (param == null){
                 msg = "SHADOOP Plugin: Missing namespace param";
                 throw new Exception();
             }
             namespace = param;
             param = params.get( SHADOOP_HOST_PARAM ).toString();
-            if (param == null)
-            {
+            if (param == null){
                 msg = "SHADOOP Plugin: Missing server name param";
                 throw new Exception();
             }
             shadoopHost = param;
             param = params.get( SHADOOP_PORT_PARAM ).toString();
-            if (param == null)
-            {
+            if (param == null){
                 msg = "SHADOOP Plugin: Missing port param";
                 throw new Exception();
             }
             msg = "SHADOOP Plugin: Error parsing port param";
             shadoopPort = Integer.parseInt( param );
             param = params.get( SHADOOP_DB_NAME_PARAM ).toString();
-            if (param == null)
-            {
+            if (param == null){
                 msg = "SHADOOP Plugin: Missing database name param";
                 throw new Exception();
             }
             shadoopDB = param;
         }
-        catch (Throwable t)
-        {
+        catch (Throwable t){
             throw new ShadoopPluginException( msg );
         }
     }
@@ -126,8 +115,7 @@ public class ShadoopPluginConfig
      *
      * @return the host
      */
-    public String getHost ()
-    {
+    public String getHost (){
         return shadoopHost;
     }
 
@@ -136,8 +124,7 @@ public class ShadoopPluginConfig
      *
      * @return the port
      */
-    public int getPort ()
-    {
+    public int getPort (){
         return shadoopPort;
     }
 
@@ -146,8 +133,7 @@ public class ShadoopPluginConfig
      *
      * @return the db
      */
-    public String getDB ()
-    {
+    public String getDB (){
         return shadoopDB;
     }
 
@@ -156,8 +142,7 @@ public class ShadoopPluginConfig
      *
      * @return the namespace
      */
-    public String getNamespace ()
-    {
+    public String getNamespace (){
         return namespace;
     }
 
@@ -166,8 +151,7 @@ public class ShadoopPluginConfig
      *
      * @return package logger
      */
-    public static Logger getLog ()
-    {
+    public static Logger getLog (){
         return log;
     }
 
