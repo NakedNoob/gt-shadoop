@@ -5,7 +5,7 @@ public class Test {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		String filter = "FastBBOX [property=geometry, envelope=ReferencedEnvelope[107.238751254 : 138.977050, 4.3945824 : 27.3434845]]";
+		String filter = "FastBBOX [property=geometry, envelope=ReferencedEnvelope[109.3359375 : 138.33984375, 4.482421875 : 18.984375]]";
 		int points[] = extract(filter);
 	}
 	/**
@@ -52,10 +52,20 @@ public class Test {
 			if(p[b] < 0)
 				p[4] = 0;
 		
-		p[0] = X1;
-		p[1] = Y1;
-		p[2] = (X2 - X1);
-		p[3] = (Y2 - Y1);
+		p[0] = Y1;
+		p[1] = X1;
+		p[2] = (Y2 - Y1);
+		p[3] = (X2 - X1);
+		System.out.println("##########################################");
+		System.out.println("##########################################");
+		System.out.println("##########################################");
+		System.out.println("p[0] = "+p[0]);
+		System.out.println("p[1] = "+p[1]);
+		System.out.println("p[2] = "+p[2]);
+		System.out.println("p[3] = "+p[3]);
+		System.out.println("##########################################");
+		System.out.println("##########################################");
+		System.out.println("##########################################");
 		return p;
 	}
 
