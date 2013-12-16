@@ -5,11 +5,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 import org.geotools.data.shadoop.ShadoopLayer.GeometryType;
 import org.geotools.data.shadoop.query.BaseShadoopQueryObject;
-import org.geotools.data.shadoop.query.DSObject;
 import org.geotools.data.shadoop.query.Query;
 import org.geotools.data.shadoop.query.Shadoop;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
@@ -73,11 +73,16 @@ public class ShadoopResultSet
     public ShadoopResultSet (ShadoopLayer layer, BaseShadoopQueryObject query)
     {
         this.layer = layer;
+        points = new int[5];
+        Arrays.fill(points, 0);
+        points[4] = 1;
         bounds = new ReferencedEnvelope( 0, 0, 0, 0, layer.getCRS() );
         features = new ArrayList<SimpleFeature>();
-        if (query != null)
-        {
-            buildFeatures( query );
+        if (query != null){
+        	if(points[4] == 1)
+        		buildFeatures( query );
+        	else
+        		System.out.println("Query cannot be processed: Coordinates are either the same or contain negative values");
         }
     }
 
@@ -125,7 +130,16 @@ public class ShadoopResultSet
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-	        File file = new File(filePath);
+        	log.warning( "################################" );
+        	log.warning( "################################" );
+        	log.warning( "################################" );
+        	log.warning( "################################" );
+        	log.warning( "FILE PATH IS: "+filePath );
+        	log.warning( "################################" );
+        	log.warning( "################################" );
+        	log.warning( "################################" );
+        	log.warning( "################################" );
+	        File file = new File("C:\\Documents and Settings\\j16727\\gt-shadoop\\src\\points2.txt");
 	        SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
 	        builder.setName("Location");
 	        builder.setSRS("EPSG:4326");
@@ -145,6 +159,9 @@ public class ShadoopResultSet
 	        	{
 	        		if (line.trim().length() > 0) // skip blank lines 
 	        		{
+	        			log.warning( "################################" );
+	                	log.warning( "FILE LINE IS: "+line );
+	                	log.warning( "################################" );
 	        			String tokens[] = line.split(",");
 	        			double latitude = Double.parseDouble(tokens[0]);
 	        			double longitude = Double.parseDouble(tokens[1]);
@@ -152,9 +169,15 @@ public class ShadoopResultSet
 	        			
 	        			featureBuilder.set(0,point);
 	        			SimpleFeature feature = featureBuilder.buildFeature(null);
+	        			log.warning( "################################" );
+	                	log.warning( "FEATURE IS: "+feature.toString() );
+	                	log.warning( "################################" );
 	        			features.add(feature);
 	        		}
 	        	}
+	        	log.warning( "################################" );
+            	log.warning( "THERE ARE "+features.size()+" features" );
+            	log.warning( "################################" );
 	        } 
 	        finally 
 	        {
@@ -166,163 +189,35 @@ public class ShadoopResultSet
         	log.severe(ioe.toString());
         }
 
-        // The below WILL NOT WORK for GeoServer's Layer Preview
-//        try
-//        {
-//            if (layer.getGeometryType() == null)
-//            {
-//                return;
-//            }
-//            shadoop = new Shadoop( layer.getConfig() );
-//            ShadoopDS db = shadoop.getDS( layer.getConfig().getDB() );
-//            ShadoopCollection coll = db.getCollection( layer.getName() );
-//            DSCursor cur = coll.find( query );  // That ShadoopCollection find method is the key. That is where your 'request' logic is truly implemented.
-//            minX = 180;
-//            maxX = -180;
-//            minY = 90;
-//            maxY = -90;
-//            
-//            File file = new File("C:\\Documents and Settings\\j16727\\gt-shadoop\\src\\points.txt");
-//
-//            // http://docs.geotools.org/latest/tutorials/feature/csv2shp.html
-////            final SimpleFeatureType TYPE = DataUtilities.createType("Location", "location:Point:srid=4326");
-//            
-//            // http://sourceforge.net/mailarchive/message.php?msg_id=31504683
-//            SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
-//            builder.setName("Location");
-//            builder.setSRS("EPSG:4326");
-//            builder.add("Location", Point.class);
-//            final SimpleFeatureType TYPE = builder.buildFeatureType();            
-//            
-//            GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory(null);
-//            SimpleFeatureBuilder featureBuilder = new SimpleFeatureBuilder(TYPE);
-////            List<SimpleFeature> features = new ArrayList<SimpleFeature>();
-//            
-//            BufferedReader reader = new BufferedReader(new FileReader(file));
-//            
-//            int i = 0;
-//            try 
-//            {
-//            	String line;
-//            	
-//            	for (line = reader.readLine(); line != null; line = reader.readLine())
-//            	{
-//            		if (line.trim().length() > 0) // skip blank lines 
-//            		{
-//            			String tokens[] = line.split(",");
-//            			double latitude = Double.parseDouble(tokens[0]);
-//            			double longitude = Double.parseDouble(tokens[1]);
-//            			Point point = geometryFactory.createPoint(new Coordinate(longitude,latitude));
-//            			
-//            			featureBuilder.set(i,point);
-//            			SimpleFeature feature = featureBuilder.buildFeature(null);
-//            			features.add(feature);
-//            		}
-//            		i++;
-//            	}
-//            } 
-//	        catch (IOException ioe)
-//	        {
-//	        	log.severe(ioe.toString());
-//	        }
-//            finally 
-//            {
-//            	reader.close();
-//            }
-//
-//            SimpleFeatureBuilder fb = new SimpleFeatureBuilder( layer.getSchema() );
-//
-//            // use SimpleFeatureBuilder.set(name, value) rather than add(value) since
-//            // attributes not in guaranteed order
-//            log.finer( "cur.count()=" + cur.count() );
-//
-//            while (cur.hasNext())
-//            {
-//                DSObject dbo = cur.next();
-//                if (dbo == null)
-//                {
-//                    continue;
-//                }
-//
-//                // get shadoop id and ensure valid
-//                if (dbo.get( "_id" ) instanceof ObjectId)
-//                {
-//                    ObjectId oid = (ObjectId) dbo.get( "_id" );
-//                    fb.set( "_id", oid.toString() );
-//                }
-//                 else
-//                {
-//                    throw new ShadoopPluginException( "_id is invalid type: "
-//                            + dbo.get( "_id" ).getClass() );
-//                }
-//
-//                // ensure geometry defined
-//                DSObject geo = (DSObject) dbo.get( "geometry" );
-//                if (geo == null || geo.get( "type" ) == null
-//                        || (geo.get( "coordinates" ) == null && geo.get( "geometries" ) == null))
-//                {
-//                    continue;
-//                }
-//
-//                // GeometryType of current record
-//                GeometryType recordGeoType = GeometryType.valueOf( geo.get( "type" ).toString() );
-//                // skip record if its geo type does not match layer geo type
-//                if (!layer.getGeometryType().equals( recordGeoType ))
-//                {
-//                    continue;
-//                }
-//
-//                // create Geometry for given type
-//                Geometry recordGeometry = createGeometry( recordGeoType, geo );
-//                if (recordGeometry != null)
-//                {
-//                    fb.set( "geometry", recordGeometry );
-//                    // set non-geometry properties for feature (GeoJSON.properties)
-//                    DSObject props = (DSObject) dbo.get( "properties" );
-//                    setProperties( fb, "properties", props );
-//                    features.add( fb.buildFeature( null ) );
-//                    bounds = new ReferencedEnvelope( minX, maxX, minY, maxY, layer.getCRS() );
-//                }
-//                else
-//                {
-//                    fb.reset();
-//                }
-//            }
-//        }
-//        catch (Throwable t)
-//        {
-//            log.severe( "Error building layer " + layer.getName() + "; " + t.getLocalizedMessage() );
-//        }
+        
         if (shadoop != null)
         {
             shadoop.close();
         }
     }
 
-    /**
-     * Sets the properties.
-     *
-     * @param fb the fb
-     * @param string the string
-     * @param props the props
-     */
-    private void setProperties(SimpleFeatureBuilder fb, String string,
-			DSObject props) {
-		// TODO Auto-generated method stub
-		
-	}
+//    /**
+//     * Sets the properties.
+//     *
+//     * @param fb the fb
+//     * @param string the string
+//     * @param props the props
+//     */
+//    private void setProperties(SimpleFeatureBuilder fb, String string,
+//			DSObject props) {
+//		
+//	}
 
-	/**
-	 * Creates the geometry.
-	 *
-	 * @param recordGeoType the record geo type
-	 * @param geo the geo
-	 * @return the geometry
-	 */
-	private Geometry createGeometry(GeometryType recordGeoType, DSObject geo) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+//	/**
+//	 * Creates the geometry.
+//	 *
+//	 * @param recordGeoType the record geo type
+//	 * @param geo the geo
+//	 * @return the geometry
+//	 */
+//	private Geometry createGeometry(GeometryType recordGeoType, DSObject geo) {
+//		return null;
+//	}
 
 	/**
 	 * Gets the schema.

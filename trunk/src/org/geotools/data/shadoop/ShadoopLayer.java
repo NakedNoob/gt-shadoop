@@ -278,31 +278,12 @@ public class ShadoopLayer
         return geometryType;
     }
 
-    /**
-     * Generate model of collection records' data fields and types.
-     *
-     * @param coll shadoop collection
-     * @param buildRule which rule to apply if same named fields with different types exist
-     * @return JSON object describing collection record
-     */
-//    private BaseShadoopQueryObject getCollectionModel (ShadoopCollection coll, RecordBuilder buildRule)
-//    {
-//        BaseShadoopQueryObject qo = null;
-//
-//        return metaData;
-//    }
-
-
-
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString ()
     {
-        return super.toString(); // TODO
+        return super.toString();
     }
-
-
-
 }
