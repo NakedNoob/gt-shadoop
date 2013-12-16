@@ -42,6 +42,7 @@ public class ShadoopResourceInfo implements ResourceInfo
     	log.info("##### ShadoopFeatureSource : " + fs.toString());
         myFS = fs;
         myURI = URI.create( myFS.getLayer().getSchema().getName().getNamespaceURI() );
+        log.info("##### URI : " + myURI.toString());
     }
 
     /**
