@@ -4,7 +4,6 @@ import org.geotools.data.FeatureReader;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ShadoopFeatureReader.
  */
@@ -22,16 +21,14 @@ public class ShadoopFeatureReader implements FeatureReader<SimpleFeatureType, Si
      *
      * @param rs the rs
      */
-    public ShadoopFeatureReader (ShadoopResultSet rs)
-    {
+    public ShadoopFeatureReader (ShadoopResultSet rs){
         results = rs;
     }
 
     /**
      * Close.
      */
-    public void close ()
-    {
+    public void close (){
     }
 
     /**
@@ -39,8 +36,7 @@ public class ShadoopFeatureReader implements FeatureReader<SimpleFeatureType, Si
      *
      * @return true, if successful
      */
-    public boolean hasNext ()
-    {
+    public boolean hasNext (){
         return (next < results.getCount());
     }
 
@@ -49,8 +45,7 @@ public class ShadoopFeatureReader implements FeatureReader<SimpleFeatureType, Si
      *
      * @return the simple feature
      */
-    public SimpleFeature next ()
-    {
+    public SimpleFeature next (){
         return results.getFeature( next++ );
     }
 
@@ -59,8 +54,7 @@ public class ShadoopFeatureReader implements FeatureReader<SimpleFeatureType, Si
      *
      * @return the feature type
      */
-    public SimpleFeatureType getFeatureType ()
-    {
+    public SimpleFeatureType getFeatureType (){
         return results.getSchema();
     }
 

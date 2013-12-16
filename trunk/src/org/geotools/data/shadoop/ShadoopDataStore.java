@@ -20,10 +20,7 @@ import org.geotools.data.LockingManager;
 import org.geotools.data.Query;
 import org.geotools.data.ServiceInfo;
 import org.geotools.data.Transaction;
-import org.geotools.data.shadoop.ShadoopLayer.GeometryType;
 import org.geotools.data.shadoop.query.BaseShadoopQueryObject;
-import org.geotools.data.shadoop.query.Shadoop;
-import org.geotools.data.shadoop.query.ShadoopDS;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.feature.NameImpl;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
@@ -35,7 +32,6 @@ import org.opengis.feature.type.Name;
 import org.opengis.filter.Filter;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
-import org.geotools.data.shadoop.query.ShadoopCollection;
 
 
 /**
@@ -83,7 +79,6 @@ public class ShadoopDataStore implements DataStore
         {
             crs = DefaultGeographicCRS.WGS84;
         }
-        // TODO when to look for and detect changes to layers
         if (layers.size() == 0)
         {
             getLayers();
@@ -100,59 +95,13 @@ public class ShadoopDataStore implements DataStore
     private void getLayers ()
     {
     	log.info("Getting Layers...." );
-        Shadoop shadoop = null;
-        try
-        {
-//            shadoop = new Shadoop( config );
-//            ShadoopDS db = shadoop.getDS( config.getDB() ); // TODO add authentication
-//            Set<String> colls = db.getCollectionNames();
-//            for (String s : colls)
-//            {
-//                ShadoopCollection dbc = db.getCollection( s );
-//                log.info( "getLayers; collection=" + dbc );
-//                // find distinct non-null geometry to determine if valid layer
-//                // TODO branch point for separate geometry-specific layers per collection
-//                List geoList = dbc.distinct( "geometry.type" );
-//                // distinct returns single BSON List, may barf if results large, > max doc. size
-//                // trap exception on props distinct and assume it's valid since there's obviously
-//                // something there (http://www.shadoopdb.org/display/DOCS/Aggregation)
-//                List propList = null;
-//                try
-//                {
-//                    propList = dbc.distinct( "properties" );
-//                }
-//                catch (Exception ex)
-//                {
-//                	System.out.println(ex.toString());
-//                }
-//                // check that layer has valid geometry and some properties defined
-//                if (geoList != null && propList != null && propList.size() > 0)
-//                {
-//                    boolean hasValidGeo = false;
-//                    for (GeometryType type : GeometryType.values())
-//                    {
-//                        if (geoList.contains( type.toString() ))
-//                        {
-//                            hasValidGeo = true;
-//                            break;
-//                        }
-//                    }
-//                    if (hasValidGeo)
-//                    {
-                        layers.add( new ShadoopLayer( "Shadoop Layer 0001", config ) );
-//                    }
-//                }
-            //}
+        try{
+        	layers.add( new ShadoopLayer( "Shadoop Layer 0001", config ) );
         }
-        catch (Throwable t)
-        {
+        catch (Throwable t){
             log.severe( "getLayers error; " + t.getMessage());
             t.printStackTrace();
         }
-//        if (shadoop != null)
-//        {
-//            shadoop.close();
-//        }
     }
 
     /**
@@ -160,8 +109,7 @@ public class ShadoopDataStore implements DataStore
      *
      * @return the crs
      */
-    public CoordinateReferenceSystem getCRS ()
-    {
+    public CoordinateReferenceSystem getCRS (){
         return crs;
     }
 
@@ -170,8 +118,7 @@ public class ShadoopDataStore implements DataStore
      *
      * @return the config
      */
-    public ShadoopPluginConfig getConfig ()
-    {
+    public ShadoopPluginConfig getConfig (){
         return config;
     }
 
@@ -181,8 +128,7 @@ public class ShadoopDataStore implements DataStore
      * @param src the src
      * @param listener the listener
      */
-    public void addListener (FeatureSource<?, ?> src, FeatureListener listener)
-    {
+    public void addListener (FeatureSource<?, ?> src, FeatureListener listener){
         lsnMgr.addFeatureListener( src, listener );
     }
 
@@ -192,8 +138,7 @@ public class ShadoopDataStore implements DataStore
      * @param src the src
      * @param listener the listener
      */
-    public void removeListener (FeatureSource<?, ?> src, FeatureListener listener)
-    {
+    public void removeListener (FeatureSource<?, ?> src, FeatureListener listener){
         lsnMgr.removeFeatureListener( src, listener );
     }
 
@@ -203,8 +148,7 @@ public class ShadoopDataStore implements DataStore
      * @param typeName the type name
      * @return the keywords
      */
-    public Set<String> getKeywords (String typeName)
-    {
+    public Set<String> getKeywords (String typeName){
         Set<String> result = null;
 
         for (ShadoopLayer ml : layers)
@@ -224,8 +168,7 @@ public class ShadoopDataStore implements DataStore
      *
      * @return the locking manager
      */
-    public LockingManager getLockingManager ()
-    {
+    public LockingManager getLockingManager (){
         // returning null as per DataStore.getLockingManager() contract
         return null;
     }
@@ -370,8 +313,7 @@ public class ShadoopDataStore implements DataStore
     /**
      * Dispose.
      */
-    public void dispose ()
-    {
+    public void dispose (){
 
     }
 

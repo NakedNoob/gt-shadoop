@@ -63,14 +63,12 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class FilterToShadoopQuery.
  */
 public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
 {
-
-    // temp holder
     /**
      * Instantiates a new filter to shadoop query.
      */
@@ -84,8 +82,7 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
      * @param extraData the extra data
      * @return the base shadoop query object
      */
-    protected BaseShadoopQueryObject asDSObject (Object extraData)
-    {
+    protected BaseShadoopQueryObject asDSObject (Object extraData){
         if ((extraData != null) || (extraData instanceof BaseShadoopQueryObject))
         {
             return (BaseShadoopQueryObject) extraData;
@@ -100,8 +97,7 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
      * @param extraData the extra data
      * @return the object
      */
-    public Object visit (Literal expression, Object extraData)
-    {
+    public Object visit (Literal expression, Object extraData){
         Object literal = expression.getValue();
         String ret = literal.toString();
         return ret;
@@ -114,8 +110,7 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
      * @param extraData the extra data
      * @return the object
      */
-    public Object visit (PropertyName expression, Object extraData)
-    {
+    public Object visit (PropertyName expression, Object extraData){
         return expression.getPropertyName();
     }
 
@@ -126,14 +121,12 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
      * @param extraData the extra data
      * @return the base shadoop query object
      */
-    public BaseShadoopQueryObject visit (ExcludeFilter filter, Object extraData)
-    {
+    public BaseShadoopQueryObject visit (ExcludeFilter filter, Object extraData){
     	BaseShadoopQueryObject output = asDSObject( extraData );
         output.put( "foo", "not_likely_to_exist" );
         return output;
     }
 
-    // An empty object should be an "all" query
     /**
      * Visit.
      *
@@ -141,8 +134,7 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
      * @param extraData the extra data
      * @return the object
      */
-    public Object visit (IncludeFilter filter, Object extraData)
-    {
+    public Object visit (IncludeFilter filter, Object extraData){
     	BaseShadoopQueryObject output = asDSObject( extraData );
         return output;
     }
@@ -156,8 +148,7 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
      * @param extraData the extra data
      * @return the object
      */
-    public Object visit (And filter, Object extraData)
-    {
+    public Object visit (And filter, Object extraData){
     	BaseShadoopQueryObject output = asDSObject( extraData );
 
         List<Filter> children = filter.getChildren();
@@ -183,8 +174,7 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
      * @param extraData the extra data
      * @return the object
      */
-    public Object visit (Id filter, Object extraData)
-    {
+    public Object visit (Id filter, Object extraData){
         throw new IllegalStateException( "Cannot encode an Id as legal CQL" );
     }
 
@@ -195,8 +185,7 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
      * @param extraData the extra data
      * @return the object
      */
-    public Object visit (Not filter, Object extraData)
-    {
+    public Object visit (Not filter, Object extraData){
 
     	BaseShadoopQueryObject output = asDSObject( extraData );
     	BaseShadoopQueryObject expr = (BaseShadoopQueryObject) filter.getFilter().accept( this, null );
@@ -211,8 +200,7 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
      * @param extraData the extra data
      * @return the object
      */
-    public Object visit (Or filter, Object extraData)
-    {
+    public Object visit (Or filter, Object extraData){
 
     	return null;
     }
@@ -224,8 +212,7 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
      * @param extraData the extra data
      * @return the object
      */
-    public Object visit (PropertyIsBetween filter, Object extraData)
-    {
+    public Object visit (PropertyIsBetween filter, Object extraData){
     	return null;
     }
 
@@ -236,8 +223,7 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
      * @param extraData the extra data
      * @return the object
      */
-    public Object visit (PropertyIsEqualTo filter, Object extraData)
-    {
+    public Object visit (PropertyIsEqualTo filter, Object extraData){
         BaseShadoopQueryObject output = asDSObject( extraData );
         Object expr1 = filter.getExpression1().accept( this, null );
         Object expr2 = filter.getExpression2().accept( this, null );
@@ -276,8 +262,7 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
      * @param extraData the extra data
      * @return the object
      */
-    public Object visit (PropertyIsNotEqualTo filter, Object extraData)
-    {
+    public Object visit (PropertyIsNotEqualTo filter, Object extraData){
         BaseShadoopQueryObject output = asDSObject( extraData );
         Object expr1 = filter.getExpression1().accept( this, null );
         Object expr2 = filter.getExpression2().accept( this, null );
@@ -304,8 +289,7 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
      * @param extraData the extra data
      * @return the object
      */
-    public Object visit (PropertyIsGreaterThan filter, Object extraData)
-    {
+    public Object visit (PropertyIsGreaterThan filter, Object extraData){
         BaseShadoopQueryObject output = asDSObject( extraData );
         Object expr1 = filter.getExpression1().accept( this, null );
         Object expr2 = filter.getExpression2().accept( this, null );
@@ -332,8 +316,7 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
      * @param extraData the extra data
      * @return the object
      */
-    public Object visit (PropertyIsGreaterThanOrEqualTo filter, Object extraData)
-    {
+    public Object visit (PropertyIsGreaterThanOrEqualTo filter, Object extraData){
         BaseShadoopQueryObject output = asDSObject( extraData );
         Object expr1 = filter.getExpression1().accept( this, null );
         Object expr2 = filter.getExpression2().accept( this, null );
@@ -360,8 +343,7 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
      * @param extraData the extra data
      * @return the object
      */
-    public Object visit (PropertyIsLessThan filter, Object extraData)
-    {
+    public Object visit (PropertyIsLessThan filter, Object extraData){
         BaseShadoopQueryObject output = asDSObject( extraData );
         Object expr1 = filter.getExpression1().accept( this, null );
         Object expr2 = filter.getExpression2().accept( this, null );
@@ -388,8 +370,7 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
      * @param extraData the extra data
      * @return the object
      */
-    public Object visit (PropertyIsLessThanOrEqualTo filter, Object extraData)
-    {
+    public Object visit (PropertyIsLessThanOrEqualTo filter, Object extraData){
         BaseShadoopQueryObject output = asDSObject( extraData );
         Object expr1 = filter.getExpression1().accept( this, null );
         Object expr2 = filter.getExpression2().accept( this, null );
@@ -409,12 +390,6 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
         return output;
     }
 
-    // Mongo doesn't have LIKE but it does have Regex. So
-    // I'm converting it like this:
-    //
-    // filter.getWildCard() returns SQL-like '%'
-    // filter.getSingleChar() returns SQL-like '_'
-    // So I'm converting "foo_bar%" to /foo.bar.*/
     /**
      * Visit.
      *
@@ -422,8 +397,7 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
      * @param extraData the extra data
      * @return the object
      */
-    public Object visit (PropertyIsLike filter, Object extraData)
-    {
+    public Object visit (PropertyIsLike filter, Object extraData){
         BaseShadoopQueryObject output = asDSObject( extraData );
         Object expr = filter.getExpression();
         if (expr instanceof String)
@@ -446,8 +420,6 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
         return output;
     }
 
-    // There is no "NULL" in MongoDB, but I assume that TODO add null support
-    // the non-existence of a column is the same...
     /**
      * Visit.
      *
@@ -455,8 +427,7 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
      * @param extraData the extra data
      * @return the object
      */
-    public Object visit (PropertyIsNull filter, Object extraData)
-    {
+    public Object visit (PropertyIsNull filter, Object extraData){
         BaseShadoopQueryObject output = asDSObject( extraData );
         Object expr = filter.accept( this, null );
         if (expr instanceof String)
@@ -475,16 +446,14 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
      * @param extraData the extra data
      * @return the object
      */
-    public Object visit (BBOX filter, Object extraData)
-    {
+    public Object visit (BBOX filter, Object extraData){
     	BaseShadoopQueryObject output = asDSObject( extraData );
 
         double minX = 180;
         double minY = 90;
         double maxX = -180;
         double maxY = -90;
-        // replace deprecated BBOX.getMinX() w/ getExpression2() call
-        // to determine mins and maxes
+
         Expression exp2 = filter.getExpression2();
         if (exp2 instanceof Literal)
         {
@@ -526,8 +495,7 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
      * @param extraData the extra data
      * @return the object
      */
-    public Object visitNullFilter (Object extraData)
-    {
+    public Object visitNullFilter (Object extraData){
         throw new NullPointerException( "Cannot encode null as a Filter" );
     }
 
@@ -538,23 +506,17 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
      * @param extraData the extra data
      * @return the object
      */
-    public Object visit (NilExpression expression, Object extraData)
-    {
+    public Object visit (NilExpression expression, Object extraData){
         return extraData;
     }
 
     /**
-     * ****************************************************
-     * The rest are either filters that don't make sense or are currently not implemented.
-     * ****************************************************
-     *
      * @param filter the filter
      * @param extraData the extra data
      * @return the object
      */
 
-    public Object visit (Beyond filter, Object extraData)
-    {
+    public Object visit (Beyond filter, Object extraData){
         return extraData;
     }
 
@@ -565,8 +527,7 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
      * @param extraData the extra data
      * @return the object
      */
-    public Object visit (Contains filter, Object extraData)
-    {
+    public Object visit (Contains filter, Object extraData){
         return extraData;
     }
 
@@ -577,8 +538,7 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
      * @param extraData the extra data
      * @return the object
      */
-    public Object visit (Crosses filter, Object extraData)
-    {
+    public Object visit (Crosses filter, Object extraData){
         return extraData;
     }
 
@@ -589,8 +549,7 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
      * @param extraData the extra data
      * @return the object
      */
-    public Object visit (Disjoint filter, Object extraData)
-    {
+    public Object visit (Disjoint filter, Object extraData){
         return extraData;
     }
 
@@ -601,8 +560,7 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
      * @param extraData the extra data
      * @return the object
      */
-    public Object visit (DWithin filter, Object extraData)
-    {
+    public Object visit (DWithin filter, Object extraData){
         return extraData;
     }
 
@@ -613,8 +571,7 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
      * @param extraData the extra data
      * @return the object
      */
-    public Object visit (Equals filter, Object extraData)
-    {
+    public Object visit (Equals filter, Object extraData){
         return extraData;
     }
 
@@ -625,8 +582,7 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
      * @param extraData the extra data
      * @return the object
      */
-    public Object visit (Intersects filter, Object extraData)
-    {
+    public Object visit (Intersects filter, Object extraData){
         return extraData;
     }
 
@@ -637,8 +593,7 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
      * @param extraData the extra data
      * @return the object
      */
-    public Object visit (Overlaps filter, Object extraData)
-    {
+    public Object visit (Overlaps filter, Object extraData){
         return extraData;
     }
 
@@ -649,8 +604,7 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
      * @param extraData the extra data
      * @return the object
      */
-    public Object visit (Touches filter, Object extraData)
-    {
+    public Object visit (Touches filter, Object extraData){
         return extraData;
     }
 
@@ -661,8 +615,7 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
      * @param extraData the extra data
      * @return the object
      */
-    public Object visit (Within filter, Object extraData)
-    {
+    public Object visit (Within filter, Object extraData){
         return extraData;
     }
 
@@ -673,8 +626,7 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
      * @param extraData the extra data
      * @return the object
      */
-    public Object visit (Add expression, Object extraData)
-    {
+    public Object visit (Add expression, Object extraData){
         return extraData;
     }
 
@@ -685,8 +637,7 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
      * @param extraData the extra data
      * @return the object
      */
-    public Object visit (Divide expression, Object extraData)
-    {
+    public Object visit (Divide expression, Object extraData){
         return extraData;
     }
 
@@ -697,8 +648,7 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
      * @param extraData the extra data
      * @return the object
      */
-    public Object visit (Function function, Object extraData)
-    {
+    public Object visit (Function function, Object extraData){
         return extraData;
     }
 
@@ -709,8 +659,7 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
      * @param extraData the extra data
      * @return the object
      */
-    public Object visit (Multiply expression, Object extraData)
-    {
+    public Object visit (Multiply expression, Object extraData){
         return extraData;
     }
 
@@ -721,108 +670,73 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
      * @param extraData the extra data
      * @return the object
      */
-    public Object visit (Subtract expression, Object extraData)
-    {
+    public Object visit (Subtract expression, Object extraData){
         return extraData;
     }
 
-    /* (non-Javadoc)
-     * 
-     * @see org.opengis.filter.FilterVisitor#visit(org.opengis.filter.PropertyIsNil,
-     * java.lang.Object) */
     /**
      * Visit.
-     *
+     * @see org.opengis.filter.FilterVisitor#visit(org.opengis.filter.PropertyIsNil,java.lang.Object)
      * @param filter the filter
      * @param extraData the extra data
      * @return the object
      */
     @Override
-    public Object visit (PropertyIsNil filter, Object extraData)
-    {
-        // TODO Auto-generated method stub
+    public Object visit (PropertyIsNil filter, Object extraData){
         return null;
     }
 
-    /* (non-Javadoc)
-     * 
-     * @see org.opengis.filter.FilterVisitor#visit(org.opengis.filter.temporal.After,
-     * java.lang.Object) */
     /**
      * Visit.
-     *
+     * @see org.opengis.filter.FilterVisitor#visit(org.opengis.filter.temporal.After,java.lang.Object)
      * @param after the after
      * @param extraData the extra data
      * @return the object
      */
     @Override
-    public Object visit (After after, Object extraData)
-    {
-        // TODO Auto-generated method stub
+    public Object visit (After after, Object extraData){
         return null;
     }
 
-    /* (non-Javadoc)
-     * 
-     * @see org.opengis.filter.FilterVisitor#visit(org.opengis.filter.temporal.AnyInteracts,
-     * java.lang.Object) */
     /**
      * Visit.
-     *
+     * @see org.opengis.filter.FilterVisitor#visit(org.opengis.filter.temporal.AnyInteracts,java.lang.Object)
      * @param anyInteracts the any interacts
      * @param extraData the extra data
      * @return the object
      */
     @Override
-    public Object visit (AnyInteracts anyInteracts, Object extraData)
-    {
-        // TODO Auto-generated method stub
+    public Object visit (AnyInteracts anyInteracts, Object extraData){
         return null;
     }
 
-    /* (non-Javadoc)
-     * 
-     * @see org.opengis.filter.FilterVisitor#visit(org.opengis.filter.temporal.Before,
-     * java.lang.Object) */
     /**
      * Visit.
-     *
+     * @see org.opengis.filter.FilterVisitor#visit(org.opengis.filter.temporal.Before,java.lang.Object)
      * @param before the before
      * @param extraData the extra data
      * @return the object
      */
     @Override
-    public Object visit (Before before, Object extraData)
-    {
-        // TODO Auto-generated method stub
+    public Object visit (Before before, Object extraData){
         return null;
     }
 
-    /* (non-Javadoc)
-     * 
-     * @see org.opengis.filter.FilterVisitor#visit(org.opengis.filter.temporal.Begins,
-     * java.lang.Object) */
     /**
      * Visit.
-     *
+     * @see org.opengis.filter.FilterVisitor#visit(org.opengis.filter.temporal.Begins,java.lang.Object)
      * @param begins the begins
      * @param extraData the extra data
      * @return the object
      */
     @Override
-    public Object visit (Begins begins, Object extraData)
-    {
-        // TODO Auto-generated method stub
+    public Object visit (Begins begins, Object extraData){
         return null;
     }
 
-    /* (non-Javadoc)
-     * 
-     * @see org.opengis.filter.FilterVisitor#visit(org.opengis.filter.temporal.BegunBy,
-     * java.lang.Object) */
     /**
      * Visit.
-     *
+     * @see org.opengis.filter.FilterVisitor#visit(org.opengis.filter.temporal.BegunBy,java.lang.Object)
      * @param begunBy the begun by
      * @param extraData the extra data
      * @return the object
@@ -830,169 +744,114 @@ public class FilterToShadoopQuery implements FilterVisitor, ExpressionVisitor
     @Override
     public Object visit (BegunBy begunBy, Object extraData)
     {
-        // TODO Auto-generated method stub
         return null;
     }
 
-    /* (non-Javadoc)
-     * 
-     * @see org.opengis.filter.FilterVisitor#visit(org.opengis.filter.temporal.During,
-     * java.lang.Object) */
     /**
      * Visit.
-     *
+     * @see org.opengis.filter.FilterVisitor#visit(org.opengis.filter.temporal.During,java.lang.Object)
      * @param during the during
      * @param extraData the extra data
      * @return the object
      */
     @Override
-    public Object visit (During during, Object extraData)
-    {
-        // TODO Auto-generated method stub
+    public Object visit (During during, Object extraData){
         return null;
     }
 
-    /* (non-Javadoc)
-     * 
-     * @see org.opengis.filter.FilterVisitor#visit(org.opengis.filter.temporal.EndedBy,
-     * java.lang.Object) */
     /**
      * Visit.
-     *
+     * @see org.opengis.filter.FilterVisitor#visit(org.opengis.filter.temporal.EndedBy,java.lang.Object)
      * @param endedBy the ended by
      * @param extraData the extra data
      * @return the object
      */
     @Override
-    public Object visit (EndedBy endedBy, Object extraData)
-    {
-        // TODO Auto-generated method stub
+    public Object visit (EndedBy endedBy, Object extraData){
         return null;
     }
 
-    /* (non-Javadoc)
-     * 
-     * @see org.opengis.filter.FilterVisitor#visit(org.opengis.filter.temporal.Ends,
-     * java.lang.Object) */
     /**
      * Visit.
-     *
+     * @see org.opengis.filter.FilterVisitor#visit(org.opengis.filter.temporal.Ends,java.lang.Object)
      * @param ends the ends
      * @param extraData the extra data
      * @return the object
      */
     @Override
-    public Object visit (Ends ends, Object extraData)
-    {
-        // TODO Auto-generated method stub
+    public Object visit (Ends ends, Object extraData){
         return null;
     }
 
-    /* (non-Javadoc)
-     * 
-     * @see org.opengis.filter.FilterVisitor#visit(org.opengis.filter.temporal.Meets,
-     * java.lang.Object) */
     /**
      * Visit.
-     *
+     * @see org.opengis.filter.FilterVisitor#visit(org.opengis.filter.temporal.Meets,java.lang.Object)
      * @param meets the meets
      * @param extraData the extra data
      * @return the object
      */
     @Override
-    public Object visit (Meets meets, Object extraData)
-    {
-        // TODO Auto-generated method stub
+    public Object visit (Meets meets, Object extraData){
         return null;
     }
 
-    /* (non-Javadoc)
-     * 
-     * @see org.opengis.filter.FilterVisitor#visit(org.opengis.filter.temporal.MetBy,
-     * java.lang.Object) */
     /**
      * Visit.
-     *
+     * @see org.opengis.filter.FilterVisitor#visit(org.opengis.filter.temporal.MetBy,java.lang.Object)
      * @param metBy the met by
      * @param extraData the extra data
      * @return the object
      */
     @Override
-    public Object visit (MetBy metBy, Object extraData)
-    {
-        // TODO Auto-generated method stub
+    public Object visit (MetBy metBy, Object extraData){
         return null;
     }
 
-    /* (non-Javadoc)
-     * 
-     * @see org.opengis.filter.FilterVisitor#visit(org.opengis.filter.temporal.OverlappedBy,
-     * java.lang.Object) */
     /**
      * Visit.
-     *
+     * @see org.opengis.filter.FilterVisitor#visit(org.opengis.filter.temporal.OverlappedBy,java.lang.Object)
      * @param overlappedBy the overlapped by
      * @param extraData the extra data
      * @return the object
      */
     @Override
-    public Object visit (OverlappedBy overlappedBy, Object extraData)
-    {
-        // TODO Auto-generated method stub
+    public Object visit (OverlappedBy overlappedBy, Object extraData){
         return null;
     }
 
-    /* (non-Javadoc)
-     * 
-     * @see org.opengis.filter.FilterVisitor#visit(org.opengis.filter.temporal.TContains,
-     * java.lang.Object) */
     /**
      * Visit.
-     *
+     * @see org.opengis.filter.FilterVisitor#visit(org.opengis.filter.temporal.TContains,java.lang.Object)
      * @param contains the contains
      * @param extraData the extra data
      * @return the object
      */
     @Override
-    public Object visit (TContains contains, Object extraData)
-    {
-        // TODO Auto-generated method stub
+    public Object visit (TContains contains, Object extraData){
         return null;
     }
 
-    /* (non-Javadoc)
-     * 
-     * @see org.opengis.filter.FilterVisitor#visit(org.opengis.filter.temporal.TEquals,
-     * java.lang.Object) */
     /**
      * Visit.
-     *
+     * @see org.opengis.filter.FilterVisitor#visit(org.opengis.filter.temporal.TEquals,java.lang.Object)
      * @param equals the equals
      * @param extraData the extra data
      * @return the object
      */
     @Override
-    public Object visit (TEquals equals, Object extraData)
-    {
-        // TODO Auto-generated method stub
+    public Object visit (TEquals equals, Object extraData){
         return null;
     }
 
-    /* (non-Javadoc)
-     * 
-     * @see org.opengis.filter.FilterVisitor#visit(org.opengis.filter.temporal.TOverlaps,
-     * java.lang.Object) */
     /**
      * Visit.
-     *
+     * @see org.opengis.filter.FilterVisitor#visit(org.opengis.filter.temporal.TOverlaps,java.lang.Object)
      * @param contains the contains
      * @param extraData the extra data
      * @return the object
      */
     @Override
-    public Object visit (TOverlaps contains, Object extraData)
-    {
-        // TODO Auto-generated method stub
+    public Object visit (TOverlaps contains, Object extraData){
         return null;
     }
 }

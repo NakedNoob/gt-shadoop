@@ -1,6 +1,5 @@
 package org.geotools.data.shadoop;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ShadoopPluginException.
  */
@@ -15,8 +14,7 @@ public class ShadoopPluginException extends Exception
      *
      * @param msg the msg
      */
-    public ShadoopPluginException (String msg)
-    {
+    public ShadoopPluginException (String msg){
         super( msg );
     }
 

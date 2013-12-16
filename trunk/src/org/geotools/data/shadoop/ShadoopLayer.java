@@ -7,7 +7,6 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import org.geotools.data.shadoop.query.BaseShadoopQueryObject;
-import org.geotools.data.shadoop.query.ShadoopCollection;
 import org.geotools.feature.AttributeTypeBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.referencing.CRS;
@@ -24,7 +23,6 @@ import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ShadoopLayer.
  */
@@ -82,8 +80,7 @@ public class ShadoopLayer
      * different types use major instance to determine which type to assign String: if same named
      * fields with different types exist; store them as Strings.
      */
-    static public enum RecordBuilder
-    {
+    static public enum RecordBuilder{
         
         /** The majority. */
         MAJORITY, 
@@ -132,12 +129,10 @@ public class ShadoopLayer
      * @param coll the coll
      * @param config the config
      */
-    public ShadoopLayer (String name, ShadoopPluginConfig config)
-    {
+    public ShadoopLayer (String name, ShadoopPluginConfig config){
     	log.info( "ShadoopLayer; layerName " + name );
         this.config = config;
         log.info("###### config:" + config.toString() + "######");
-//        layerName = coll.getName();
         layerName = name;
         
         keywords = new HashSet<String>();
@@ -154,13 +149,10 @@ public class ShadoopLayer
         AttributeDescriptor a = b.buildDescriptor( "_id" );
         builder.add( a );
 
-        // We could get this out of the table, exercise for the reader... TODO
-        try
-        {
+        try{
             crs = CRS.decode( "EPSG:4326" );
         }
-        catch (Throwable t)
-        {
+        catch (Throwable t){
             crs = DefaultGeographicCRS.WGS84;
         }
 
@@ -212,8 +204,6 @@ public class ShadoopLayer
         keywords.add( "_id" );
         keywords.add( "geometry" );
 
-        // Now get all the properties...
-        // AJG - TODO here
         schema = builder.buildFeatureType();
     }
 
@@ -223,8 +213,7 @@ public class ShadoopLayer
      *
      * @return the name
      */
-    public String getName ()
-    {
+    public String getName (){
         return layerName;
     }
 
@@ -233,8 +222,7 @@ public class ShadoopLayer
      *
      * @return the schema
      */
-    public SimpleFeatureType getSchema ()
-    {
+    public SimpleFeatureType getSchema (){
         return schema;
     }
 
@@ -243,8 +231,7 @@ public class ShadoopLayer
      *
      * @return the keywords
      */
-    public Set<String> getKeywords ()
-    {
+    public Set<String> getKeywords (){
         return keywords;
     }
 
@@ -253,8 +240,7 @@ public class ShadoopLayer
      *
      * @return the crs
      */
-    public CoordinateReferenceSystem getCRS ()
-    {
+    public CoordinateReferenceSystem getCRS (){
         return crs;
     }
 
@@ -263,8 +249,7 @@ public class ShadoopLayer
      *
      * @return the config
      */
-    public ShadoopPluginConfig getConfig ()
-    {
+    public ShadoopPluginConfig getConfig (){
         return config;
     }
 
@@ -273,17 +258,12 @@ public class ShadoopLayer
      *
      * @return GeometryType, may be null if not set to valid and supported GeoJSON geometry
      */
-    public GeometryType getGeometryType ()
-    {
+    public GeometryType getGeometryType (){
         return geometryType;
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
     @Override
-    public String toString ()
-    {
+    public String toString (){
         return super.toString();
     }
 }

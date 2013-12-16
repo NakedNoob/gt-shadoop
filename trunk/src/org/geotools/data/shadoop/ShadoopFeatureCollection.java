@@ -6,7 +6,6 @@ import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ShadoopFeatureCollection.
  */
@@ -21,8 +20,7 @@ public class ShadoopFeatureCollection extends DataFeatureCollection
      *
      * @param rs the rs
      */
-    public ShadoopFeatureCollection (ShadoopResultSet rs)
-    {
+    public ShadoopFeatureCollection (ShadoopResultSet rs){
         results = rs;
     }
 
@@ -32,8 +30,7 @@ public class ShadoopFeatureCollection extends DataFeatureCollection
      * @return the count
      */
     @Override
-    public int getCount ()
-    {
+    public int getCount (){
         return results.getCount();
     }
 
@@ -43,8 +40,7 @@ public class ShadoopFeatureCollection extends DataFeatureCollection
      * @return the bounds
      */
     @Override
-    public ReferencedEnvelope getBounds ()
-    {
+    public ReferencedEnvelope getBounds (){
         return results.getBounds();
     }
 
@@ -54,8 +50,7 @@ public class ShadoopFeatureCollection extends DataFeatureCollection
      * @return the schema
      */
     @Override
-    public SimpleFeatureType getSchema ()
-    {
+    public SimpleFeatureType getSchema (){
         return results.getSchema();
     }
 
@@ -65,8 +60,7 @@ public class ShadoopFeatureCollection extends DataFeatureCollection
      * @return the feature reader
      */
     @Override
-    public FeatureReader<SimpleFeatureType, SimpleFeature> reader ()
-    {
+    public FeatureReader<SimpleFeatureType, SimpleFeature> reader (){
         return new ShadoopFeatureReader( results );
     }
 }
