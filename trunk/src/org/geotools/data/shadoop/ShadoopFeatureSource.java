@@ -245,26 +245,12 @@ public class ShadoopFeatureSource implements SimpleFeatureSource {
 		p[1] = X1;
 		p[2] = (Y2 - Y1);
 		p[3] = (X2 - X1);
-		System.out.println("##########################################");
-		System.out.println("##########################################");
-		System.out.println("##########################################");
-		System.out.println("p[0] = "+p[0]);
-		System.out.println("p[1] = "+p[1]);
-		System.out.println("p[2] = "+p[2]);
-		System.out.println("p[3] = "+p[3]);
-		System.out.println("##########################################");
-		System.out.println("##########################################");
-		System.out.println("##########################################");
-		log.warning("##########################################");
-		log.warning("##########################################");
-		log.warning("##########################################");
-		log.warning("p[0] = "+p[0]);
-		log.warning("p[1] = "+p[1]);
-		log.warning("p[2] = "+p[2]);
-		log.warning("p[3] = "+p[3]);
-		log.warning("##########################################");
-		log.warning("##########################################");
-		log.warning("##########################################");
+		
+		log.info("Y1 value is: "+p[0]);
+		log.info("X1 value is: "+p[1]);
+		log.info("Height is: "+p[2]);
+		log.info("Width is: "+p[3]);
+		
 		for(int b=0; b<4;b++)
 			if(p[b] < 0)
 				p[4] = 0;
