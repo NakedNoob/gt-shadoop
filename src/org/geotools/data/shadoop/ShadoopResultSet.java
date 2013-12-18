@@ -114,15 +114,7 @@ public class ShadoopResultSet
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-        	log.info( "################################" );
-        	log.info( "################################" );
-        	log.info( "################################" );
-        	log.info( "################################" );
         	log.info( "FILE PATH IS: "+filePath );
-        	log.info( "################################" );
-        	log.info( "################################" );
-        	log.info( "################################" );
-        	log.info( "################################" );
 	        File file = new File(filePath);
 	        SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
 	        builder.setName("Location");
@@ -140,9 +132,7 @@ public class ShadoopResultSet
 	        	
 	        	for (line = reader.readLine(); line != null; line = reader.readLine()){
 	        		if (line.trim().length() > 0){
-	        			log.info( "################################" );
 	                	log.info( "FILE LINE IS: "+line );
-	                	log.info( "################################" );
 	        			String tokens[] = line.split(",");
 	        			double latitude = Double.parseDouble(tokens[0]);
 	        			double longitude = Double.parseDouble(tokens[1]);
@@ -150,15 +140,11 @@ public class ShadoopResultSet
 	        			
 	        			featureBuilder.set(0,point);
 	        			SimpleFeature feature = featureBuilder.buildFeature(null);
-	        			log.info( "################################" );
 	                	log.info( "FEATURE IS: "+feature.toString() );
-	                	log.info( "################################" );
 	        			features.add(feature);
 	        		}
 	        	}
-	        	log.info( "################################" );
             	log.info( "THERE ARE "+features.size()+" features" );
-            	log.info( "################################" );
 	        } 
 	        finally {
 	        	reader.close();
