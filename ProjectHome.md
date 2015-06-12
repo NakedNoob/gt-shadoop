@@ -1,0 +1,1 @@
+This project provides the capability to connect GIS Services through Geoserver's (Geotools) API with a spatial hadoop capability developed at University of Minnesota.
